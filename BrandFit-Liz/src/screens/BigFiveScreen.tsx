@@ -3,12 +3,12 @@
  * Migrado desde src/brandfit/screens/BigFive.tsx del prototipo web.
  */
 import React from 'react'
-import { View, Text, ScrollView, StyleSheet } from 'react-native'
+import { View, ScrollView, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useApp } from '../context'
 import { IDEALS, TRAITS } from '../data/constants'
 import { archetypeLabel } from '../data/helpers'
-import { Button, Card, ScreenHeader } from '../components'
+import { Button, Card, ScreenHeader, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 import NoAnalysis from './NoAnalysis'
 

@@ -5,13 +5,13 @@
 import React from 'react'
 import {
   TouchableOpacity,
-  Text,
   StyleSheet,
   ActivityIndicator,
   type StyleProp,
   type ViewStyle,
 } from 'react-native'
 import { Colors, FontSize, Radius } from '../theme'
+import { AppText as Text } from './AppText'
 
 type Variant = 'primary' | 'secondary' | 'ghost'
 

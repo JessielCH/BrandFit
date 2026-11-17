@@ -3,8 +3,9 @@
  * Equivalente a <SectionTitle> del prototipo web.
  */
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { Colors, FontSize } from '../theme'
+import { AppText as Text } from './AppText'
 
 type Props = {
   children: React.ReactNode

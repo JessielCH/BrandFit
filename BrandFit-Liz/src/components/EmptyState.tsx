@@ -3,8 +3,9 @@
  * Equivalente a <EmptyState> del prototipo web.
  */
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
+import { AppText as Text } from './AppText'
 
 type Props = {
   icon: React.ReactNode

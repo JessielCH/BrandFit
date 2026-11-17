@@ -6,7 +6,6 @@
 import React, { useState } from 'react'
 import {
   View,
-  Text,
   TouchableOpacity,
   Modal,
   FlatList,
@@ -18,7 +17,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { useApp } from '../context'
 import { ARCHETYPES } from '../data/constants'
 import { archetypeLabel, engagementBonus } from '../data/helpers'
-import { Avatar, Button, Card, Chip, ScreenHeader } from '../components'
+import { Avatar, Button, Card, Chip, ScreenHeader, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 import NoAnalysis from './NoAnalysis'
 

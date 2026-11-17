@@ -3,11 +3,11 @@
  * Migrado desde src/brandfit/screens/Benford.tsx del prototipo web.
  */
 import React from 'react'
-import { View, Text, ScrollView, StyleSheet } from 'react-native'
+import { View, ScrollView, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useApp } from '../context'
 import { BENFORD_EXPECTED } from '../data/constants'
-import { Button, Card, ScreenHeader } from '../components'
+import { Button, Card, ScreenHeader, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 import NoAnalysis from './NoAnalysis'
 

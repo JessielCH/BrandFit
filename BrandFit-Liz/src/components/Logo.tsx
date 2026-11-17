@@ -3,8 +3,9 @@
  * Reemplaza el SVG del prototipo web con Views de React Native.
  */
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { Colors, FontSize, Radius } from '../theme'
+import { AppText as Text } from './AppText'
 
 export function Logo() {
   return (

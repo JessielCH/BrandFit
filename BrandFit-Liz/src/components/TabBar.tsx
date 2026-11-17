@@ -4,12 +4,13 @@
  * Equivalente a <TabBar> del prototipo web.
  */
 import React from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Platform } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useApp } from '../context'
 import { Colors, FontSize } from '../theme'
 import type { ScreenId } from '../data/types'
+import { AppText as Text } from './AppText'
 
 // ─── Definición de tabs ───────────────────────────────────────────────────────
 

@@ -5,7 +5,6 @@
 import React, { useState } from 'react'
 import {
   View,
-  Text,
   TextInput,
   ScrollView,
   TouchableOpacity,
@@ -17,7 +16,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { useApp } from '../context'
 import { CREATORS } from '../data/constants'
 import { archetypeLabel } from '../data/helpers'
-import { Avatar, Button, Card, Logo, ScoreChip, SectionTitle } from '../components'
+import { Avatar, Button, Card, Logo, ScoreChip, SectionTitle, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 
 export default function HomeScreen() {
@@ -82,6 +81,14 @@ export default function HomeScreen() {
           </Button>
 
           <Text style={styles.hint}>Analizamos los últimos 10 videos</Text>
+
+          {/* Tip interactivo para probar estado de fraude */}
+          <View style={styles.tipBox}>
+            <Ionicons name="information-circle-outline" size={16} color={Colors.primary} />
+            <Text style={styles.tipText}>
+              Tip: analiza <Text style={styles.tipBold}>"bot"</Text> o <Text style={styles.tipBold}>"fake"</Text> para ver el flujo con anomalías.
+            </Text>
+          </View>
         </Card>
 
         {/* 3. Recientes */}
@@ -165,6 +172,26 @@ const styles = StyleSheet.create({
   errorText: { fontSize: FontSize.sm, color: Colors.dangerText },
   submitBtn: { marginTop: Spacing.sm },
   hint: { fontSize: FontSize.sm, color: Colors.muted, textAlign: 'center' },
+  tipBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.primarySoft,
+    borderRadius: Radius.sm + 2,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    gap: 8,
+    marginTop: 4,
+  },
+  tipText: {
+    flex: 1,
+    fontSize: FontSize.xs + 1,
+    color: Colors.primaryDark,
+    lineHeight: 18,
+  },
+  tipBold: {
+    fontWeight: '700',
+    color: Colors.primaryDark,
+  },
 
   // Recientes
   recent: { gap: Spacing.md },

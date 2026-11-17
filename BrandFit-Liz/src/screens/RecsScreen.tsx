@@ -3,12 +3,12 @@
  * Migrado desde src/brandfit/screens/Recs.tsx del prototipo web.
  */
 import React from 'react'
-import { View, Text, ScrollView, StyleSheet } from 'react-native'
+import { View, ScrollView, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useApp } from '../context'
 import { avatarColors } from '../data/helpers'
-import { Card, ScreenHeader, ToneChip } from '../components'
+import { Card, ScreenHeader, ToneChip, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 import NoAnalysis from './NoAnalysis'
 

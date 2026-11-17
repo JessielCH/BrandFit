@@ -4,9 +4,10 @@
  * Equivalente a <ScreenHeader> del prototipo web.
  */
 import React from 'react'
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors, FontSize, Spacing } from '../theme'
+import { AppText as Text } from './AppText'
 
 type Props = {
   title: string

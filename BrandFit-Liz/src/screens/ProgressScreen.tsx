@@ -3,11 +3,11 @@
  * Migrado desde src/brandfit/screens/Progress.tsx del prototipo web.
  */
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native'
+import { View, StyleSheet, ActivityIndicator } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useApp } from '../context'
 import { ANALYSIS_STEPS } from '../data/constants'
-import { Button, Card } from '../components'
+import { Button, Card, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 
 const STEP_MS = 1100

@@ -3,9 +3,10 @@
  * Usa expo-linear-gradient para replicar el gradiente HSL del prototipo web.
  */
 import React from 'react'
-import { Text, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { avatarColors } from '../data/helpers'
+import { AppText as Text } from './AppText'
 
 type Props = {
   username: string
