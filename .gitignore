@@ -38,6 +38,12 @@ out/
 Prototipo móvil BrandFit/
 "Prototipo móvil BrandFit/"
 
+# Agentes de IA y configuración local (no subir a GitHub)
+.agents/
+.agent/
+AGENTS.md
+*.agent.md
+
 # Android / iOS (Mobile)
 *.apk
 *.aab
