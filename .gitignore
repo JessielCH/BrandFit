@@ -34,6 +34,10 @@ yarn-error.log*
 dist/
 out/
 
+# Prototipos y recursos de diseño
+Prototipo móvil BrandFit/
+"Prototipo móvil BrandFit/"
+
 # Android / iOS (Mobile)
 *.apk
 *.aab
