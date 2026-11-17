@@ -23,16 +23,25 @@ wheels/
 .installed.cfg
 *.egg
 
-# Node.js / Frontend / React Native / Mobile
+# Node.js / Frontend / React Native / Expo
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 .expo/
+.expo-shared/
+web-build/
 .next/
 dist/
 out/
+
+# Agentes de IA y configuración local (no subir a GitHub)
+.agents/
+.agent/
+AGENTS.md
+CLAUDE.md
+*.agent.md
 
 # Android / iOS (Mobile)
 *.apk
@@ -79,4 +88,3 @@ desktop.ini
 *.log
 tmp/
 temp/
-
