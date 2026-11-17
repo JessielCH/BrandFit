@@ -4,7 +4,7 @@
  * Equivalente a <Chip>, <ScoreChip> y <ToneChip> del prototipo web.
  */
 import React from 'react'
-import { View, Text, StyleSheet, type ViewStyle } from 'react-native'
+import { View, Text, StyleSheet, type StyleProp, type ViewStyle } from 'react-native'
 import { Colors, FontSize, Radius } from '../theme'
 import { scoreTone } from '../data/helpers'
 import type { Tone } from '../data/types'
@@ -16,7 +16,7 @@ export type ChipTone = 'success' | 'warning' | 'danger' | 'neutral'
 type ChipProps = {
   children: React.ReactNode
   tone?: ChipTone
-  style?: ViewStyle
+  style?: StyleProp<ViewStyle>
 }
 
 // ─── Chip base ────────────────────────────────────────────────────────────────

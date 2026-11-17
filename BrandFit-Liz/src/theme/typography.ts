@@ -1,14 +1,12 @@
 /**
  * Tokens tipográficos de BrandFit.
- * React Native usa fontFamily por nombre de fuente registrada.
- * Para usar Inter se recomienda expo-font + useFonts().
- * Por compatibilidad inmediata usamos la fuente del sistema.
+ * Inter cargada desde @expo-google-fonts/inter en App.tsx.
  */
 export const FontFamily = {
-  regular: undefined,   // sistema
-  medium: undefined,
-  semibold: undefined,
-  bold: undefined,
+  regular: 'Inter_400Regular',
+  medium: 'Inter_500Medium',
+  semibold: 'Inter_600SemiBold',
+  bold: 'Inter_700Bold',
 } as const
 
 export const FontSize = {

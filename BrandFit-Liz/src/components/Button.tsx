@@ -8,6 +8,7 @@ import {
   Text,
   StyleSheet,
   ActivityIndicator,
+  type StyleProp,
   type ViewStyle,
 } from 'react-native'
 import { Colors, FontSize, Radius } from '../theme'
@@ -20,7 +21,7 @@ type Props = {
   variant?: Variant
   disabled?: boolean
   loading?: boolean
-  style?: ViewStyle
+  style?: StyleProp<ViewStyle>
 }
 
 export function Button({
