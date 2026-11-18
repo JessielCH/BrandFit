@@ -66,12 +66,6 @@ Con la asistencia analítica de **Gemini 3.8**, se evaluó que ambas visiones po
 2. **Evaluación de compatibilidad de marca:** Análisis del engagement sobre una muestra de videos recientes, contrastando los rasgos de personalidad del creador con el arquetipo de la marca para determinar el nivel de afinidad.
 3. **Recomendación estratégica de formatos:** Identificación de los videos de mayor rendimiento orgánico para sugerir a la marca formatos de contenido específicos que su audiencia real consume con mayor frecuencia.
 
-La estructura de pantallas y componentes visuales se construyó tomando como referencia la metodología de **Atomic Design** diseñada en FigJam, facilitando la modularización y coherencia visual en cada vista.
-
-<p align="center">
-  <img src="docs/design/atomic-design.png" alt="Arquitectura Atomic Design en FigJam" width="750" />
-</p>
-
 ---
 
 ## Demostración Visual del Prototipo
