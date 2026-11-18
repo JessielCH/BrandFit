@@ -2,46 +2,93 @@
 
 > Herramienta para marcas que quieren colaborar con creadores de contenido sin adivinar.
 
-[![Estado](https://img.shields.io/badge/Estado-Prototipo%20en%20desarrollo-orange)](https://github.com/JessielCH/BrandFit)
+[![Estado](https://img.shields.io/badge/Estado-Prototipo%20m%C3%B3vil-047857)](https://github.com/JessielCH/BrandFit)
 [![Licencia](https://img.shields.io/badge/Licencia-MIT-blue.svg)](LICENSE)
 
 ---
 
 ## Acerca de BrandFit
 
-BrandFit es una plataforma orientada a optimizar la toma de decisiones en colaboraciones entre marcas y creadores de contenido, sustituyendo la intuición por análisis objetivo. Combina tres ideas en un solo flujo continuo:
+Prototipo móvil en **React Native + Expo** basado en el diseño de Figma. Recorre en un solo flujo visual tres etapas (con datos simulados en frontend):
 
-1. **Verificación de autenticidad con la ley de Benford:** Análisis estadístico de frecuencias numéricas en interacciones para detectar anomalías, cuentas automatizadas y patrones artificiales.
-2. **Fit de marca:** Comparación entre el perfil de personalidad del creador y el arquetipo de la marca para evaluar la coherencia de imagen y valores.
-3. **Recomendación de contenido:** Identificación de formatos y temáticas con mayor tracción en la audiencia real para orientar las campañas.
-
----
-
-## Estado del Proyecto
-
-> **Estado:** Prototipo en desarrollo.
-
-El proyecto se encuentra en etapa preliminar de investigación y diseño de componentes.
+1. **Autenticidad (Ley de Benford):** distribución del primer dígito de seguidores y likes (esperada vs. observada) para detectar cuentas sospechosas.
+2. **Brand Fit Score y Big Five:** puntaje de compatibilidad (0–100) y comparación de los 5 rasgos de personalidad del creador frente al arquetipo de marca elegido.
+3. **Recomendaciones de contenido:** top 3 videos por engagement, formato sugerido y recomendación general.
 
 ---
 
-## Hoja de Ruta
+## Requisitos
 
-- [x] Definición conceptual del flujo
-- [x] Configuración inicial del repositorio y documentación base
-- [ ] Módulo de análisis estadístico (Ley de Benford)
-- [ ] Algoritmo de compatibilidad de arquetipos de marca
-- [ ] Motor de recomendación de formatos de contenido
-- [ ] Interfaz de usuario
+- [Node.js](https://nodejs.org/) 20 o superior
+- App **Expo Go** instalada en el celular ([Android](https://play.google.com/store/apps/details?id=host.exp.exponent) / [iOS](https://apps.apple.com/app/expo-go/id982107779))
+- Computadora y celular conectados a la **misma red Wi-Fi**
 
 ---
 
-## Contribuciones
+## Cómo ejecutar el proyecto
 
-Las contribuciones son bienvenidas. Revisa los lineamientos en [CONTRIBUTING.md](CONTRIBUTING.md) y el código de conducta en [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+```bash
+# 1. Instalar dependencias (solo la primera vez)
+npm install
+
+# 2. Iniciar el servidor de Expo
+npm start
+```
+
+- **En Android:** abre **Expo Go** y toca **Scan QR code** para escanear el QR de la terminal.
+- **En iOS:** escanea el QR con la cámara del iPhone para abrirlo en **Expo Go**.
+- **Si no conecta por la red local:** ejecuta `npx expo start --tunnel`.
+
+### Comandos útiles
+
+| Comando             | Descripción                         |
+| ------------------- | ----------------------------------- |
+| `npm start`         | Inicia el servidor de Expo (QR)     |
+| `npm run android`   | Abre en emulador/dispositivo Android |
+| `npm run ios`       | Abre en simulador iOS (macOS)       |
+| `npm run web`       | Abre la vista web en el navegador   |
+| `npm run typecheck` | Verifica los tipos con TypeScript   |
+
+---
+
+## Flujo de pantallas
+
+1. **Inicio (`HomeScreen`)** – ingreso de `@username` de TikTok («¿A quién analizamos?») y lista de análisis recientes.
+2. **Progreso (`ProgressScreen`)** – simulación paso a paso del análisis.
+3. **Autenticidad (`BenfordScreen`)** – veredicto, gráfico de la Ley de Benford y métricas generales.
+4. **Brand Fit Score (`ScoreScreen`)** – selector de arquetipo de marca y medidor circular de puntaje.
+5. **Big Five (`BigFiveScreen`)** – barras comparativas de personalidad (Creador vs. Ideal).
+6. **Recomendaciones (`RecsScreen`)** – top 3 videos, formato sugerido y tarjetas de recomendación.
+
+> **Tip de prueba:** escribe un usuario que contenga `bot` o `fake` (por ejemplo `cuentabot`) para ver el flujo de alerta por cuenta sospechosa.
+
+---
+
+## Estructura del proyecto
+
+```text
+App.tsx                 # Punto de entrada: fuentes Inter, providers y navegador
+index.ts                # Registro del componente raíz en Expo
+src/
+├── components/
+│   ├── ui/             # Componentes base (Button, Card, Chip, Avatar, Logo...)
+│   ├── home/           # Formulario de @username e ítem de recientes
+│   ├── progress/       # Barra de progreso y pasos del análisis
+│   ├── benford/        # Veredicto, gráfico Benford y cuadrícula de métricas
+│   ├── score/          # Selector de arquetipo y anillo SVG de puntaje
+│   ├── bigfive/        # Barra comparativa por rasgo de personalidad
+│   └── recs/           # Ítem de video y tarjeta de recomendación
+├── context/            # Estado global de navegación y creador activo (AppContext)
+├── data/               # Datos simulados (creadores, arquetipos, pasos)
+├── navigation/         # Navegador por estado (AppNavigator) y barra inferior (TabBar)
+├── screens/            # Las 6 pantallas del prototipo + pantalla de estado vacío
+├── theme/              # Paleta de colores, tipografía Inter y radios de borde
+├── types/              # Definiciones de tipos TypeScript
+└── utils/              # Funciones auxiliares (validación, bonos y colores HSL)
+```
 
 ---
 
 ## Licencia
 
-Este proyecto se distribuye bajo los términos de la licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más información.
+Distribuido bajo la licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más información.
