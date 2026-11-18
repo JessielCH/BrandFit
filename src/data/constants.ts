@@ -1,9 +1,15 @@
 /**
- * Constantes y datos de ejemplo de BrandFit.
- * Migrado desde src/brandfit/data.ts del prototipo web.
+ * @file constants.ts
+ * @description Catálogo de constantes, perfiles simulados (mock data) y distribuciones teóricas para BrandFit Mobile.
+ *
+ * @author BrandFit Team
  */
+
 import type { ArchetypeId, Creator, Archetype } from './types'
 
+/**
+ * Catálogo de arquetipos de marca soportados para el cálculo de Brand Fit.
+ */
 export const ARCHETYPES: Archetype[] = [
   { id: 'tech', label: 'Tecnología / Innovación', short: 'Tecnología' },
   { id: 'bienestar', label: 'Bienestar / Estilo de vida', short: 'Bienestar' },
@@ -12,6 +18,9 @@ export const ARCHETYPES: Archetype[] = [
   { id: 'causas', label: 'Causas sociales / Activismo', short: 'Causas sociales' },
 ]
 
+/**
+ * Nombres canónicos de las 5 dimensiones psicométricas del modelo Big Five (OCEAN).
+ */
 export const TRAITS = [
   'Apertura',
   'Responsabilidad',
@@ -20,7 +29,10 @@ export const TRAITS = [
   'Neuroticismo',
 ] as const
 
-/** Perfil ideal Big Five por arquetipo (mismo orden que TRAITS). */
+/**
+ * Perfiles ideales de personalidad Big Five para cada arquetipo de marca (en orden: O, C, E, A, N).
+ * Sirven como vector de referencia para calcular la distancia y afinidad.
+ */
 export const IDEALS: Record<ArchetypeId, number[]> = {
   tech: [85, 87, 60, 55, 25],
   bienestar: [70, 65, 55, 85, 20],
@@ -29,8 +41,15 @@ export const IDEALS: Record<ArchetypeId, number[]> = {
   causas: [80, 60, 70, 90, 35],
 }
 
+/**
+ * Porcentajes teóricos de frecuencia para el primer dígito (1 al 9) según la Ley de Benford:
+ * P(d) = log10(1 + 1/d) * 100
+ */
 export const BENFORD_EXPECTED = [30.1, 17.6, 12.5, 9.7, 7.9, 6.7, 5.8, 5.1, 4.6]
 
+/**
+ * Pasos secuenciales mostrados en la animación de progreso de análisis.
+ */
 export const ANALYSIS_STEPS = [
   'Recolectando datos públicos',
   'Verificando autenticidad (Ley de Benford)',
@@ -39,9 +58,14 @@ export const ANALYSIS_STEPS = [
   'Generando Brand Fit Score',
 ]
 
+/**
+ * Palabras clave en el nombre de usuario que activan el caso simulado de anomalía / cuenta falsa.
+ */
 export const SUSPICIOUS_HINTS = ['viralboost', 'bot', 'fake', 'compra']
 
-/** Creadores de ejemplo para la lista de recientes. */
+/**
+ * Perfiles de creadores simulados para la lista de análisis recientes.
+ */
 export const CREATORS: Creator[] = [
   {
     username: 'alexmando15',
@@ -91,7 +115,10 @@ export const CREATORS: Creator[] = [
   },
 ]
 
-/** Cuenta de ejemplo para el estado de fraude. */
+/**
+ * Perfil de prueba representativo de una cuenta sospechosa / granja de bots.
+ * Presenta distribución plana (anómala) en la Ley de Benford y engagement insignificante.
+ */
 export const FRAUD_CREATOR: Creator = {
   username: 'viralboost.mx',
   name: 'Viral Boost',

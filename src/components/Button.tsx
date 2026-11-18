@@ -1,7 +1,12 @@
 /**
- * Button – botón con tres variantes: primary, secondary y ghost.
- * Equivalente al <Button> del prototipo web.
+ * @file Button.tsx
+ * @description Componente atómico de botón interactivo para BrandFit Mobile.
+ * Ofrece tres variantes de diseño (primary, secondary, ghost) con soporte
+ * para estados deshabilitado y de carga (spinner de ActivityIndicator).
+ *
+ * @author BrandFit Team
  */
+
 import React from 'react'
 import {
   TouchableOpacity,
@@ -13,17 +18,37 @@ import {
 import { Colors, FontSize, Radius } from '../theme'
 import { AppText as Text } from './AppText'
 
+/** Variantes visuales disponibles para el botón */
 type Variant = 'primary' | 'secondary' | 'ghost'
 
+/**
+ * Propiedades del componente Button.
+ */
 type Props = {
+  /** Contenido o texto que se muestra en el interior del botón */
   children: React.ReactNode
+  /** Manejador del evento presionar */
   onPress?: () => void
+  /** Variante visual de color y borde: primary (verde esmeralda), secondary (blanco con borde), ghost (transparente) */
   variant?: Variant
+  /** Indica si la interacción está deshabilitada */
   disabled?: boolean
+  /** Indica si se debe mostrar un indicador de carga en lugar del contenido */
   loading?: boolean
+  /** Sobreescritura de estilos para el contenedor del botón */
   style?: StyleProp<ViewStyle>
 }
 
+/**
+ * Botón accesible y modular con retroalimentación visual al tacto.
+ *
+ * @example
+ * ```tsx
+ * <Button variant="primary" onPress={handleAnalyze} loading={isLoading}>
+ *   Analizar Creador
+ * </Button>
+ * ```
+ */
 export function Button({
   children,
   onPress,

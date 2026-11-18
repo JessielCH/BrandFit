@@ -1,16 +1,29 @@
 /**
- * Logo – logotipo de BrandFit con icono de barras y nombre.
- * Reemplaza el SVG del prototipo web con Views de React Native.
+ * @file Logo.tsx
+ * @description Isotipo y logotipo vectorial oficial de BrandFit para React Native.
+ * Renderiza el cuadro con tres barras verticales asimétricas (símbolo de métricas de analítica)
+ * junto con el nombre de marca en tipografía Inter SemiBold.
+ *
+ * @author BrandFit Team
  */
+
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Colors, FontSize, Radius } from '../theme'
 import { AppText as Text } from './AppText'
 
+/**
+ * Logotipo oficial de BrandFit compuesto por símbolo gráfico y texto de marca.
+ *
+ * @example
+ * ```tsx
+ * <Logo />
+ * ```
+ */
 export function Logo() {
   return (
     <View style={styles.row}>
-      {/* Ícono: 3 barras verticales de distintas alturas */}
+      {/* docs: Caja contenedora verde con las 3 barras de distribución estadística */}
       <View style={styles.iconBox}>
         <View style={styles.barsRow}>
           <View style={[styles.bar, styles.barShort]} />
@@ -18,6 +31,7 @@ export function Logo() {
           <View style={[styles.bar, styles.barMid]} />
         </View>
       </View>
+      {/* docs: Nombre tipográfico de la plataforma */}
       <Text style={styles.name}>BrandFit</Text>
     </View>
   )

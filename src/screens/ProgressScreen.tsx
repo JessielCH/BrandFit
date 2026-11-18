@@ -1,7 +1,12 @@
 /**
- * ProgressScreen – stepper animado con 5 pasos del análisis.
- * Migrado desde src/brandfit/screens/Progress.tsx del prototipo web.
+ * @file ProgressScreen.tsx
+ * @description Pantalla de simulación del progreso del análisis con stepper animado de 5 etapas.
+ * Ilustra la recolección de datos, verificación de Benford, cálculo psicométrico Big Five,
+ * estimación de engagement y consolidación del Brand Fit Score.
+ *
+ * @author BrandFit Team
  */
+
 import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, ActivityIndicator } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
@@ -10,13 +15,20 @@ import { ANALYSIS_STEPS } from '../data/constants'
 import { Button, Card, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 
+/** Duración en milisegundos de cada paso del stepper */
 const STEP_MS = 1100
 
+/**
+ * Pantalla de Progreso: Muestra una barra porcentual continua y un stepper vertical
+ * que avanza automáticamente hasta completar el análisis simulado.
+ */
 export default function ProgressScreen() {
   const { pendingUsername, finishAnalysis, go } = useApp()
+  // docs: Índice del paso actualmente activo (0 a total)
   const [current, setCurrent] = useState(0)
   const total = ANALYSIS_STEPS.length
 
+  // docs: Efecto temporizador que avanza paso a paso hasta concluir y llamar a finishAnalysis()
   useEffect(() => {
     if (current >= total) {
       const t = setTimeout(finishAnalysis, 450)
@@ -26,16 +38,17 @@ export default function ProgressScreen() {
     return () => clearTimeout(t)
   }, [current, total, finishAnalysis])
 
+  // docs: Cálculo de porcentaje completado (0 a 100)
   const pct = Math.round((Math.min(current, total) / total) * 100)
 
   return (
     <View style={styles.container}>
-      {/* 1. Título */}
+      {/* 1. Título principal */}
       <Text style={styles.title}>
         Analizando a @{pendingUsername || 'creador'}
       </Text>
 
-      {/* 2. Barra de progreso */}
+      {/* 2. Barra de progreso lineal */}
       <View style={styles.progressSection}>
         <View style={styles.progressLabels}>
           <Text style={styles.progressLabel}>Progreso</Text>
@@ -46,7 +59,7 @@ export default function ProgressScreen() {
         </View>
       </View>
 
-      {/* 3. Stepper */}
+      {/* 3. Stepper vertical con estados (hecho, activo, pendiente) */}
       <Card style={styles.card}>
         {ANALYSIS_STEPS.map((step, i) => {
           const state = i < current ? 'done' : i === current ? 'active' : 'pending'
@@ -58,49 +71,49 @@ export default function ProgressScreen() {
                 <View
                   style={[
                     styles.connector,
-                    state === 'done' ? styles.connectorDone : styles.connectorPending,
+                    i < current ? styles.connectorDone : styles.connectorPending,
                   ]}
                 />
               )}
 
-              {/* Ícono de estado */}
+              {/* Indicador de estado del paso: icono de check, spinner activo o círculo vacío */}
               <View
                 style={[
-                  styles.dot,
-                  state === 'done' && styles.dotDone,
-                  state === 'active' && styles.dotActive,
-                  state === 'pending' && styles.dotPending,
+                  styles.circle,
+                  state === 'done' && styles.circleDone,
+                  state === 'active' && styles.circleActive,
+                  state === 'pending' && styles.circlePending,
                 ]}
               >
-                {state === 'done' && (
-                  <Ionicons name="checkmark" size={14} color={Colors.white} strokeWidth={2.5} />
-                )}
-                {state === 'active' && (
+                {state === 'done' ? (
+                  <Ionicons name="checkmark" size={14} color="#FFFFFF" />
+                ) : state === 'active' ? (
                   <ActivityIndicator size="small" color={Colors.primary} />
-                )}
-                {state === 'pending' && (
-                  <Text style={styles.dotNumber}>{i + 1}</Text>
+                ) : (
+                  <View style={styles.pendingDot} />
                 )}
               </View>
 
-              {/* Texto del paso */}
-              <Text
-                style={[
-                  styles.stepText,
-                  state === 'pending' && styles.stepTextPending,
-                  state === 'active' && styles.stepTextActive,
-                  state === 'done' && styles.stepTextDone,
-                ]}
-              >
-                {step}
-              </Text>
+              {/* Etiqueta textual del paso */}
+              <View style={styles.stepInfo}>
+                <Text
+                  style={[
+                    styles.stepLabel,
+                    state === 'done' && styles.stepLabelDone,
+                    state === 'active' && styles.stepLabelActive,
+                    state === 'pending' && styles.stepLabelPending,
+                  ]}
+                >
+                  {step}
+                </Text>
+              </View>
             </View>
           )
         })}
       </Card>
 
-      {/* 4. Cancelar */}
-      <Button variant="secondary" onPress={() => go('home')} style={styles.cancelBtn}>
+      {/* 4. Acción de Cancelar para volver a la pantalla de Inicio */}
+      <Button variant="ghost" onPress={() => go('home')} style={styles.cancelBtn}>
         Cancelar
       </Button>
     </View>
@@ -110,83 +123,119 @@ export default function ProgressScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: Spacing['2xl'],
-    paddingTop: Spacing['2xl'],
-    paddingBottom: Spacing['3xl'],
-    gap: 24,
     backgroundColor: Colors.bg,
+    paddingHorizontal: Spacing['2xl'],
+    paddingTop: Spacing['4xl'],
+    paddingBottom: Spacing['3xl'],
   },
   title: {
-    fontSize: 26,
+    fontSize: FontSize['4xl'],
     fontWeight: '600',
     color: Colors.ink,
     letterSpacing: -0.4,
-    lineHeight: 32,
+    marginBottom: Spacing['2xl'],
   },
-
-  // Barra de progreso
-  progressSection: { gap: Spacing.md },
+  progressSection: {
+    gap: 8,
+    marginBottom: Spacing.xl,
+  },
   progressLabels: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'baseline',
+    alignItems: 'center',
   },
-  progressLabel: { fontSize: FontSize.sm, color: Colors.muted },
-  progressPct: { fontSize: FontSize.base, fontWeight: '700', color: Colors.primary },
+  progressLabel: {
+    fontSize: FontSize.sm,
+    color: Colors.muted,
+  },
+  progressPct: {
+    fontSize: FontSize.sm,
+    fontWeight: '600',
+    color: Colors.primary,
+  },
   trackBg: {
     height: 8,
+    backgroundColor: Colors.line,
     borderRadius: Radius.full,
-    backgroundColor: '#E7EFEB',
     overflow: 'hidden',
   },
   trackFill: {
     height: '100%',
-    borderRadius: Radius.full,
     backgroundColor: Colors.primary,
+    borderRadius: Radius.full,
   },
-
-  // Stepper
-  card: { padding: 20, gap: 0 },
+  card: {
+    padding: Spacing['2xl'],
+    marginBottom: Spacing.xl,
+  },
   stepRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
+    gap: 14,
     paddingVertical: 14,
     position: 'relative',
   },
   stepRowBorder: {
-    borderBottomWidth: 0, // usamos el conector en lugar
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.line,
   },
   connector: {
     position: 'absolute',
-    left: 15,
-    top: 46,
+    left: 13,
+    top: 36,
+    bottom: -14,
     width: 2,
-    height: 28,
-    borderRadius: 1,
+    zIndex: 0,
   },
-  connectorDone: { backgroundColor: Colors.success },
-  connectorPending: { backgroundColor: Colors.line },
-
-  dot: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    borderWidth: 2,
+  connectorDone: {
+    backgroundColor: Colors.primary,
+  },
+  connectorPending: {
+    backgroundColor: Colors.line,
+  },
+  circle: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
-    flexShrink: 0,
     zIndex: 1,
   },
-  dotDone: { backgroundColor: Colors.success, borderColor: Colors.success },
-  dotActive: { backgroundColor: Colors.primarySoft, borderColor: Colors.primary },
-  dotPending: { backgroundColor: Colors.white, borderColor: Colors.line },
-  dotNumber: { fontSize: FontSize.sm, fontWeight: '600', color: Colors.placeholder },
-
-  stepText: { flex: 1, fontSize: FontSize.base },
-  stepTextPending: { color: Colors.muted },
-  stepTextActive: { color: Colors.ink, fontWeight: '600' },
-  stepTextDone: { color: Colors.ink, fontWeight: '500' },
-
-  cancelBtn: { marginTop: 'auto' },
+  circleDone: {
+    backgroundColor: Colors.primary,
+  },
+  circleActive: {
+    backgroundColor: Colors.primarySoft,
+    borderWidth: 2,
+    borderColor: Colors.primary,
+  },
+  circlePending: {
+    backgroundColor: Colors.line,
+  },
+  pendingDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: Colors.placeholder,
+  },
+  stepInfo: {
+    flex: 1,
+  },
+  stepLabel: {
+    fontSize: FontSize.base,
+  },
+  stepLabelDone: {
+    color: Colors.ink,
+    fontWeight: '500',
+  },
+  stepLabelActive: {
+    color: Colors.primaryDark,
+    fontWeight: '600',
+  },
+  stepLabelPending: {
+    color: Colors.muted,
+  },
+  cancelBtn: {
+    marginTop: 'auto',
+  },
 })

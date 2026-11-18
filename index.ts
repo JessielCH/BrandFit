@@ -1,8 +1,14 @@
-import { registerRootComponent } from 'expo';
+/**
+ * @file index.ts
+ * @description Punto de entrada principal y registro de componente raíz para Expo y React Native.
+ * Invoca `registerRootComponent` para vincular App con el AppRegistry nativo,
+ * asegurando compatibilidad completa tanto en Expo Go como en compilaciones nativas de iOS y Android.
+ *
+ * @author BrandFit Team
+ */
 
-import App from './App';
+import { registerRootComponent } from 'expo'
+import App from './App'
 
-// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
-// It also ensures that whether you load the app in Expo Go or in a native build,
-// the environment is set up appropriately
-registerRootComponent(App);
+// docs: Registra el componente 'main' en AppRegistry de React Native de forma compatible con Expo
+registerRootComponent(App)

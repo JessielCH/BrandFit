@@ -1,7 +1,12 @@
 /**
- * HomeScreen – formulario de búsqueda + lista de análisis recientes.
- * Migrado desde src/brandfit/screens/Home.tsx del prototipo web.
+ * @file HomeScreen.tsx
+ * @description Pantalla principal de BrandFit Mobile.
+ * Ofrece la barra de búsqueda y validación de nombres de usuario de TikTok/redes sociales,
+ * junto con la visualización interactiva de análisis recientes y consejos de prueba.
+ *
+ * @author BrandFit Team
  */
+
 import React, { useState } from 'react'
 import {
   View,
@@ -19,11 +24,21 @@ import { archetypeLabel } from '../data/helpers'
 import { Avatar, Button, Card, Logo, ScoreChip, SectionTitle, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 
+/**
+ * Pantalla de Inicio: Punto de entrada donde la marca ingresa el nombre de usuario
+ * a auditar o consulta perfiles previamente analizados.
+ */
 export default function HomeScreen() {
   const { startAnalysis, openCreator } = useApp()
+  // docs: Estado local del campo de entrada de texto
   const [value, setValue] = useState('')
+  // docs: Estado local de errores de validación de formato
   const [error, setError] = useState('')
 
+  /**
+   * Sanitiza y valida el nombre de usuario antes de disparar el flujo de análisis.
+   * Remueve '@' iniciales y comprueba longitud (2 a 24) y caracteres válidos.
+   */
   function submit() {
     const clean = value.trim().replace(/^@/, '')
     if (!clean) return setError('Escribe un @username.')
@@ -44,7 +59,7 @@ export default function HomeScreen() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        {/* 1. Encabezado */}
+        {/* 1. Encabezado con Logotipo institucional */}
         <View style={styles.header}>
           <Logo />
           <Text style={styles.tagline}>
@@ -52,10 +67,11 @@ export default function HomeScreen() {
           </Text>
         </View>
 
-        {/* 2. Formulario */}
+        {/* 2. Tarjeta del Formulario de Búsqueda */}
         <Card style={styles.formCard}>
           <Text style={styles.formTitle}>¿A quién analizamos?</Text>
 
+          {/* docs: Input estilizado con icono de arroba y estado de error dinámico */}
           <View style={[styles.inputRow, error ? styles.inputError : styles.inputNormal]}>
             <Ionicons name="at" size={20} color={Colors.muted} />
             <TextInput
@@ -69,6 +85,7 @@ export default function HomeScreen() {
             />
           </View>
 
+          {/* docs: Mensaje de error si la validación falla */}
           {error ? (
             <View style={styles.errorRow}>
               <Ionicons name="alert-circle-outline" size={15} color={Colors.dangerText} />
@@ -76,13 +93,14 @@ export default function HomeScreen() {
             </View>
           ) : null}
 
+          {/* docs: Botón de envío */}
           <Button onPress={submit} style={styles.submitBtn}>
             Analizar creador
           </Button>
 
           <Text style={styles.hint}>Analizamos los últimos 10 videos</Text>
 
-          {/* Tip interactivo para probar estado de fraude */}
+          {/* docs: Sugerencia interactiva para probar casos de cuentas con anomalías */}
           <View style={styles.tipBox}>
             <Ionicons name="information-circle-outline" size={16} color={Colors.primary} />
             <Text style={styles.tipText}>
@@ -91,7 +109,7 @@ export default function HomeScreen() {
           </View>
         </Card>
 
-        {/* 3. Recientes */}
+        {/* 3. Sección de Análisis Recientes */}
         <View style={styles.recent}>
           <SectionTitle>Análisis recientes</SectionTitle>
           {CREATORS.map((c) => (

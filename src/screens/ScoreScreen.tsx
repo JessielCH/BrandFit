@@ -1,8 +1,12 @@
 /**
- * ScoreScreen – Brand Fit Score circular + selector de arquetipo.
- * Migrado desde src/brandfit/screens/Score.tsx del prototipo web.
- * Usa react-native-svg para el gráfico de anillo.
+ * @file ScoreScreen.tsx
+ * @description Pantalla del indicador Brand Fit Score con tacómetro circular en SVG y selector de arquetipo.
+ * Calcula y proyecta la afinidad general (0 a 100) entre la personalidad del creador
+ * y la identidad de marca seleccionada por el usuario corporativo.
+ *
+ * @author BrandFit Team
  */
+
 import React, { useState } from 'react'
 import {
   View,
@@ -21,17 +25,25 @@ import { Avatar, Button, Card, Chip, ScreenHeader, AppText as Text } from '../co
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 import NoAnalysis from './NoAnalysis'
 
+/** Radio del arco de circunferencia del tacómetro circular */
 const R = 84
+/** Perímetro de la circunferencia para el cálculo del strokeDashoffset */
 const C = 2 * Math.PI * R
 
+/**
+ * Pantalla de Score: Presenta el tacómetro circular SVG, las métricas complementarias
+ * de seguidores y engagement, y permite alternar dinámicamente el arquetipo de marca.
+ */
 export default function ScoreScreen() {
   const { creator, archetype, setArchetype, go } = useApp()
+  // docs: Estado de visibilidad del modal para seleccionar otro arquetipo de marca
   const [dropdownOpen, setDropdownOpen] = useState(false)
 
   if (!creator) return <NoAnalysis />
 
   const score = creator.scores[archetype]
   const label = archetypeLabel(archetype)
+  // docs: Cálculo de desplazamiento del trazo SVG proporcional al puntaje obtenido (0-100)
   const strokeDashoffset = C * (1 - score / 100)
 
   return (
@@ -40,14 +52,14 @@ export default function ScoreScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      {/* 1. Encabezado */}
+      {/* 1. Encabezado de pantalla con avatar del creador */}
       <ScreenHeader
         title="Brand Fit Score"
         subtitle={`@${creator.username}`}
         right={<Avatar username={creator.username} hue={creator.hue} size={36} />}
       />
 
-      {/* 2. Selector de arquetipo */}
+      {/* 2. Selector de Arquetipo de Marca interactivo */}
       <TouchableOpacity
         style={styles.selector}
         onPress={() => setDropdownOpen(true)}
@@ -57,38 +69,39 @@ export default function ScoreScreen() {
         <Ionicons name="chevron-down" size={20} color={Colors.muted} />
       </TouchableOpacity>
 
-      {/* Modal dropdown */}
-      <Modal
-        visible={dropdownOpen}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setDropdownOpen(false)}
-      >
+      {/* docs: Modal desplegable con la lista de arquetipos disponibles */}
+      <Modal visible={dropdownOpen} transparent animationType="fade">
         <TouchableOpacity
-          style={styles.overlay}
+          style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setDropdownOpen(false)}
         >
-          <View style={styles.dropdown}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Selecciona un arquetipo</Text>
             <FlatList
               data={ARCHETYPES}
-              keyExtractor={(a) => a.id}
-              renderItem={({ item: a }) => (
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
                 <TouchableOpacity
-                  style={styles.dropdownItem}
-                  onPress={() => { setArchetype(a.id); setDropdownOpen(false) }}
-                  activeOpacity={0.7}
+                  style={[
+                    styles.option,
+                    item.id === archetype && styles.optionActive,
+                  ]}
+                  onPress={() => {
+                    setArchetype(item.id)
+                    setDropdownOpen(false)
+                  }}
                 >
                   <Text
                     style={[
-                      styles.dropdownLabel,
-                      a.id === archetype && styles.dropdownLabelActive,
+                      styles.optionText,
+                      item.id === archetype && styles.optionTextActive,
                     ]}
                   >
-                    {a.label}
+                    {item.label}
                   </Text>
-                  {a.id === archetype && (
-                    <Ionicons name="checkmark" size={16} color={Colors.primary} />
+                  {item.id === archetype && (
+                    <Ionicons name="checkmark" size={18} color={Colors.primary} />
                   )}
                 </TouchableOpacity>
               )}
@@ -97,53 +110,73 @@ export default function ScoreScreen() {
         </TouchableOpacity>
       </Modal>
 
-      {/* 3. Score circular */}
-      <Card style={styles.scoreCard}>
+      {/* 3. Tacómetro Circular SVG de Puntaje */}
+      <Card style={styles.gaugeCard}>
         <View style={styles.svgWrap}>
-          {/* SVG ring */}
-          <Svg width={230} height={230} viewBox="0 0 200 200"
-            style={{ transform: [{ rotate: '-90deg' }] }}>
-            {/* Fondo del anillo */}
-            <Circle cx={100} cy={100} r={R} fill="none" stroke={Colors.primarySoft} strokeWidth={14} />
-            {/* Progreso */}
+          <Svg width={200} height={200}>
+            {/* Círculo de fondo tenue */}
             <Circle
               cx={100}
               cy={100}
               r={R}
+              stroke={Colors.line}
+              strokeWidth={14}
               fill="none"
+            />
+            {/* Círculo de progreso en verde esmeralda BrandFit */}
+            <Circle
+              cx={100}
+              cy={100}
+              r={R}
               stroke={Colors.primary}
               strokeWidth={14}
-              strokeLinecap="round"
-              strokeDasharray={`${C} ${C}`}
+              strokeDasharray={C}
               strokeDashoffset={strokeDashoffset}
+              strokeLinecap="round"
+              fill="none"
+              transform="rotate(-90 100 100)"
             />
           </Svg>
-
-          {/* Número superpuesto */}
-          <View style={styles.scoreOverlay}>
-            <Text style={styles.scoreNumber}>{score}</Text>
-            <Text style={styles.scoreOf}>de 100</Text>
+          {/* Valor numérico y etiqueta en el centro del tacómetro */}
+          <View style={styles.scoreCenter}>
+            <Text style={styles.scoreNum}>{score}</Text>
+            <Text style={styles.scoreMax}>/ 100</Text>
           </View>
         </View>
 
-        <Text style={styles.scoreFit}>Fit con {label}</Text>
-        <Text style={styles.scoreCaption}>Personalidad, engagement y tono</Text>
+        {/* Insignia cualitativa de compatibilidad */}
+        <Chip tone="success" style={styles.fitChip}>
+          {score >= 70 ? 'Excelente afinidad' : 'Buena afinidad'}
+        </Chip>
+
+        {/* 4. Resumen de Métricas Clave */}
+        <View style={styles.metricsRow}>
+          <View style={styles.metricItem}>
+            <Text style={styles.metricVal}>{creator.followers}</Text>
+            <Text style={styles.metricLabel}>Seguidores</Text>
+          </View>
+          <View style={styles.metricDivider} />
+          <View style={styles.metricItem}>
+            <Text style={styles.metricVal}>{creator.engagement}%</Text>
+            <Text style={styles.metricLabel}>Engagement</Text>
+          </View>
+          <View style={styles.metricDivider} />
+          <View style={styles.metricItem}>
+            <Text style={styles.metricVal}>+{engagementBonus(creator.engagement)} pts</Text>
+            <Text style={styles.metricLabel}>Bono</Text>
+          </View>
+        </View>
       </Card>
 
-      {/* 4. Chips de resumen */}
-      <View style={styles.chips}>
-        <Chip tone="success">
-          Engagement {creator.engagement}% · Bono +{engagementBonus(creator.engagement)}
-        </Chip>
-        <Chip>
-          Tono: {creator.tone.pos} pos / {creator.tone.neu} neu / {creator.tone.neg} neg
-        </Chip>
+      {/* 5. Acciones de Navegación hacia Big Five y Recomendaciones */}
+      <View style={styles.actions}>
+        <Button onPress={() => go('bigfive')}>
+          Ver desglose Big Five
+        </Button>
+        <Button variant="secondary" onPress={() => go('recs')}>
+          Ver recomendaciones
+        </Button>
       </View>
-
-      {/* 5. Acción */}
-      <Button onPress={() => go('bigfive')}>
-        Ver análisis detallado →
-      </Button>
     </ScrollView>
   )
 }
@@ -151,79 +184,125 @@ export default function ScoreScreen() {
 const styles = StyleSheet.create({
   scroll: { flex: 1, backgroundColor: Colors.bg },
   content: {
-    paddingHorizontal: Spacing['2xl'],
     paddingBottom: Spacing['3xl'],
-    gap: 16,
   },
-
-  // Selector
   selector: {
-    height: 48,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    backgroundColor: Colors.white,
+    borderWidth: 1,
+    borderColor: Colors.line,
     borderRadius: Radius.md,
-    borderWidth: 1,
-    borderColor: Colors.line,
-    backgroundColor: Colors.white,
-    paddingHorizontal: 16,
+    paddingHorizontal: Spacing.xl,
+    paddingVertical: 14,
+    marginHorizontal: Spacing['2xl'],
+    marginBottom: Spacing.xl,
   },
-  selectorText: { fontSize: FontSize.base, fontWeight: '600', color: Colors.ink },
-
-  // Overlay / dropdown
-  overlay: {
+  selectorText: {
+    fontSize: FontSize.md,
+    fontWeight: '500',
+    color: Colors.ink,
+  },
+  modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    justifyContent: 'center',
-    padding: 24,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'flex-end',
   },
-  dropdown: {
+  modalContent: {
     backgroundColor: Colors.white,
-    borderRadius: Radius.lg,
-    borderWidth: 1,
-    borderColor: Colors.line,
-    overflow: 'hidden',
+    borderTopLeftRadius: Radius.xl,
+    borderTopRightRadius: Radius.xl,
+    padding: Spacing['2xl'],
+    maxHeight: '60%',
   },
-  dropdownItem: {
+  modalTitle: {
+    fontSize: FontSize.lg,
+    fontWeight: '600',
+    color: Colors.ink,
+    marginBottom: Spacing.xl,
+  },
+  option: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
     paddingVertical: 14,
+    paddingHorizontal: Spacing.md,
+    borderRadius: Radius.sm,
   },
-  dropdownLabel: { fontSize: FontSize.base, color: Colors.ink },
-  dropdownLabelActive: { fontWeight: '600', color: Colors.primary },
-
-  // Score card
-  scoreCard: {
+  optionActive: {
+    backgroundColor: Colors.primarySoft,
+  },
+  optionText: {
+    fontSize: FontSize.base,
+    color: Colors.ink,
+  },
+  optionTextActive: {
+    color: Colors.primary,
+    fontWeight: '600',
+  },
+  gaugeCard: {
+    marginHorizontal: Spacing['2xl'],
+    padding: Spacing['3xl'],
     alignItems: 'center',
-    paddingVertical: 24,
-    paddingHorizontal: 20,
-    gap: 12,
+    marginBottom: Spacing.xl,
   },
   svgWrap: {
-    width: 230,
-    height: 230,
-    position: 'relative',
+    width: 200,
+    height: 200,
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative',
+    marginBottom: Spacing.xl,
   },
-  scoreOverlay: {
+  scoreCenter: {
     position: 'absolute',
     alignItems: 'center',
-    justifyContent: 'center',
   },
-  scoreNumber: {
-    fontSize: 72,
+  scoreNum: {
+    fontSize: FontSize.score,
     fontWeight: '700',
-    color: Colors.primary,
-    lineHeight: 80,
+    color: Colors.ink,
+    lineHeight: FontSize.score,
     letterSpacing: -2,
   },
-  scoreOf: { fontSize: FontSize.sm, color: Colors.muted },
-  scoreFit: { fontSize: FontSize.lg, fontWeight: '600', color: Colors.ink },
-  scoreCaption: { fontSize: FontSize.sm, color: Colors.muted },
-
-  // Chips
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  scoreMax: {
+    fontSize: FontSize.base,
+    color: Colors.muted,
+    marginTop: -4,
+  },
+  fitChip: {
+    marginBottom: Spacing['2xl'],
+  },
+  metricsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    paddingTop: Spacing.xl,
+    borderTopWidth: 1,
+    borderTopColor: Colors.line,
+  },
+  metricItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  metricVal: {
+    fontSize: FontSize.lg,
+    fontWeight: '600',
+    color: Colors.ink,
+  },
+  metricLabel: {
+    fontSize: FontSize.xs,
+    color: Colors.muted,
+    marginTop: 2,
+  },
+  metricDivider: {
+    width: 1,
+    height: 32,
+    backgroundColor: Colors.line,
+  },
+  actions: {
+    marginHorizontal: Spacing['2xl'],
+    gap: Spacing.md,
+  },
 })

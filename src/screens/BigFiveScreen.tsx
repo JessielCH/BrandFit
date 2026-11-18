@@ -1,7 +1,12 @@
 /**
- * BigFiveScreen – rasgos de personalidad Big Five vs. perfil ideal del arquetipo.
- * Migrado desde src/brandfit/screens/BigFive.tsx del prototipo web.
+ * @file BigFiveScreen.tsx
+ * @description Pantalla de comparación psicométrica entre el perfil de personalidad del creador
+ * (modelo Big Five / OCEAN: Apertura, Responsabilidad, Extraversión, Amabilidad, Neuroticismo)
+ * y el vector ideal correspondiente al arquetipo de marca seleccionado.
+ *
+ * @author BrandFit Team
  */
+
 import React from 'react'
 import { View, ScrollView, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
@@ -12,10 +17,15 @@ import { Button, Card, ScreenHeader, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 import NoAnalysis from './NoAnalysis'
 
+/**
+ * Pantalla Big Five: Detalla el ajuste psicométrico dimensión por dimensión,
+ * visualizando la barra del creador y el marcador ideal del arquetipo.
+ */
 export default function BigFiveScreen() {
   const { creator, archetype, go } = useApp()
   if (!creator) return <NoAnalysis />
 
+  // docs: Vector de 5 valores numéricos que definen el ideal para el arquetipo activo
   const ideal = IDEALS[archetype]
 
   return (
@@ -24,15 +34,16 @@ export default function BigFiveScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      {/* 1. Encabezado */}
+      {/* 1. Encabezado de retorno hacia el Score */}
       <ScreenHeader
         title="Personalidad vs. arquetipo"
         subtitle={archetypeLabel(archetype)}
         onBack={() => go('score')}
       />
 
-      {/* 2. Leyenda */}
+      {/* 2. Tarjeta principal con la leyenda y las barras comparativas */}
       <Card style={styles.card}>
+        {/* Leyenda comparativa */}
         <View style={styles.legend}>
           <View style={styles.legendItem}>
             <View style={[styles.legendBar, { backgroundColor: Colors.successBar }]} />
@@ -44,7 +55,7 @@ export default function BigFiveScreen() {
           </View>
         </View>
 
-        {/* 3. Rasgos */}
+        {/* 3. Desglose de cada dimensión Big Five */}
         {TRAITS.map((trait, i) => {
           const value = creator.bigFive[i]
           const target = ideal[i]
@@ -54,36 +65,41 @@ export default function BigFiveScreen() {
               key={trait}
               style={[styles.traitRow, i < TRAITS.length - 1 && styles.traitBorder]}
             >
+              {/* Cabecera del rasgo con valores actuales y diferencia */}
               <View style={styles.traitHeader}>
                 <Text style={styles.traitName}>{trait}</Text>
                 <Text style={styles.traitValues}>
                   {value} / {target} ·{' '}
-                  <Text style={styles.traitDiff}>Dif. {diff}</Text>
+                  <Text style={diff <= 15 ? styles.diffGood : styles.diffFair}>
+                    {diff === 0 ? 'Exacto' : `dif. ${diff}`}
+                  </Text>
                 </Text>
               </View>
 
-              {/* Barra de progreso con marcador ideal */}
+              {/* Barra comparativa horizontal */}
               <View style={styles.barTrack}>
-                {/* Barra del creador */}
-                <View style={[styles.barFill, { width: `${value}%` }]} />
-                {/* Marcador de posición ideal */}
-                <View style={[styles.idealMarker, { left: `${target}%` }]} />
+                {/* Barra de puntuación del creador */}
+                <View
+                  style={[
+                    styles.barFill,
+                    {
+                      width: `${value}%`,
+                      backgroundColor: diff <= 15 ? Colors.successBar : Colors.warningBg,
+                    },
+                  ]}
+                />
+                {/* Marcador del valor ideal del arquetipo corporativo */}
+                <View style={[styles.targetMarker, { left: `${target}%` }]} />
               </View>
             </View>
           )
         })}
       </Card>
 
-      {/* 4. Nota */}
-      <View style={styles.noteRow}>
-        <Ionicons name="information-circle-outline" size={16} color={Colors.muted} />
-        <Text style={styles.noteText}>
-          Confianza baja: 10 videos indican tendencia, no conclusión.
-        </Text>
-      </View>
-
-      {/* 5. Acción */}
-      <Button onPress={() => go('recs')}>Ver recomendaciones</Button>
+      {/* 4. Botón de navegación hacia la pantalla final de Recomendaciones */}
+      <Button onPress={() => go('recs')} style={styles.nextBtn}>
+        Ver recomendaciones de contenido
+      </Button>
     </ScrollView>
   )
 }
@@ -91,79 +107,92 @@ export default function BigFiveScreen() {
 const styles = StyleSheet.create({
   scroll: { flex: 1, backgroundColor: Colors.bg },
   content: {
-    paddingHorizontal: Spacing['2xl'],
     paddingBottom: Spacing['3xl'],
-    gap: 16,
   },
-  card: { overflow: 'hidden', padding: 0 },
-
-  // Leyenda
+  card: {
+    marginHorizontal: Spacing['2xl'],
+    padding: Spacing['2xl'],
+    marginBottom: Spacing.xl,
+  },
   legend: {
     flexDirection: 'row',
-    gap: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    gap: 20,
+    marginBottom: Spacing.xl,
+    paddingBottom: Spacing.lg,
     borderBottomWidth: 1,
     borderBottomColor: Colors.line,
   },
-  legendItem: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  legendBar: { width: 16, height: 10, borderRadius: Radius.full },
-  legendMarker: {
-    width: 4,
-    height: 14,
-    borderRadius: Radius.full,
-    backgroundColor: Colors.primary,
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
-  legendLabel: { fontSize: FontSize.sm, color: Colors.muted },
-
-  // Rasgos
-  traitRow: { paddingHorizontal: 16, paddingVertical: 18 },
-  traitBorder: { borderBottomWidth: 1, borderBottomColor: Colors.line },
+  legendBar: {
+    width: 20,
+    height: 8,
+    borderRadius: Radius.full,
+  },
+  legendMarker: {
+    width: 3,
+    height: 12,
+    borderRadius: 2,
+    backgroundColor: Colors.ink,
+  },
+  legendLabel: {
+    fontSize: FontSize.xs,
+    color: Colors.muted,
+  },
+  traitRow: {
+    paddingVertical: 12,
+  },
+  traitBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.line,
+  },
   traitHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'baseline',
-    marginBottom: 12,
+    alignItems: 'center',
+    marginBottom: 8,
   },
-  traitName: { fontSize: FontSize.base, fontWeight: '600', color: Colors.ink },
-  traitValues: { fontSize: FontSize.sm, color: Colors.muted },
-  traitDiff: { fontWeight: '600', color: Colors.ink },
-
-  // Barra
+  traitName: {
+    fontSize: FontSize.base,
+    fontWeight: '500',
+    color: Colors.ink,
+  },
+  traitValues: {
+    fontSize: FontSize.sm,
+    color: Colors.muted,
+  },
+  diffGood: {
+    color: Colors.successText,
+    fontWeight: '600',
+  },
+  diffFair: {
+    color: Colors.warningText,
+    fontWeight: '600',
+  },
   barTrack: {
     height: 10,
+    backgroundColor: Colors.bg,
     borderRadius: Radius.full,
-    backgroundColor: '#F1F5F3',
     position: 'relative',
-    overflow: 'visible',
+    overflow: 'hidden',
   },
   barFill: {
     height: '100%',
     borderRadius: Radius.full,
-    backgroundColor: Colors.successBar,
   },
-  idealMarker: {
+  targetMarker: {
     position: 'absolute',
-    top: -5,
-    width: 5,
-    height: 20,
-    borderRadius: Radius.full,
-    backgroundColor: Colors.primary,
-    marginLeft: -2.5,
-    borderWidth: 2,
-    borderColor: Colors.white,
+    top: 0,
+    bottom: 0,
+    width: 3,
+    backgroundColor: Colors.ink,
+    marginLeft: -1.5,
+    borderRadius: 1,
   },
-
-  // Nota
-  noteRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 8,
-  },
-  noteText: {
-    flex: 1,
-    fontSize: FontSize.sm,
-    color: Colors.muted,
-    lineHeight: FontSize.sm * 1.5,
+  nextBtn: {
+    marginHorizontal: Spacing['2xl'],
   },
 })

@@ -1,8 +1,12 @@
 /**
- * TabBar – barra de navegación inferior con 3 pestañas.
- * Usa @expo/vector-icons (Ionicons) incluido en Expo.
- * Equivalente a <TabBar> del prototipo web.
+ * @file TabBar.tsx
+ * @description Barra de navegación inferior (Bottom Navigation) de tres pestañas principales:
+ * Inicio, Análisis y Recomendaciones.
+ * Utiliza iconos vectoriales de Ionicons (@expo/vector-icons) y respeta las zonas seguras del dispositivo (safe area insets).
+ *
+ * @author BrandFit Team
  */
+
 import React from 'react'
 import { View, TouchableOpacity, StyleSheet, Platform } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
@@ -12,17 +16,27 @@ import { Colors, FontSize } from '../theme'
 import type { ScreenId } from '../data/types'
 import { AppText as Text } from './AppText'
 
-// ─── Definición de tabs ───────────────────────────────────────────────────────
+// ─── Definición de pestañas ───────────────────────────────────────────────────
 
+/**
+ * Estructura de definición para cada pestaña del menú inferior.
+ */
 type TabDef = {
+  /** Identificador único de la pestaña */
   id: string
+  /** Texto mostrado debajo del icono */
   label: string
+  /** Nombre del icono de Ionicons cuando la pestaña está activa */
   iconActive: keyof typeof Ionicons.glyphMap
+  /** Nombre del icono de Ionicons cuando la pestaña está inactiva */
   iconInactive: keyof typeof Ionicons.glyphMap
+  /** Conjunto de pantallas que activan visualmente esta pestaña */
   screens: ScreenId[]
+  /** Pantalla de destino al pulsar la pestaña */
   target: ScreenId
 }
 
+/** Configuración de las 3 pestañas principales de la navegación */
 const TABS: TabDef[] = [
   {
     id: 'inicio',
@@ -52,8 +66,17 @@ const TABS: TabDef[] = [
 
 // ─── Componente ───────────────────────────────────────────────────────────────
 
+/**
+ * Componente de barra de navegación inferior fijada en el fondo de la pantalla.
+ *
+ * @example
+ * ```tsx
+ * <TabBar />
+ * ```
+ */
 export function TabBar() {
   const { screen, go } = useApp()
+  // docs: Obtiene los márgenes seguros para evitar solapamientos con la barra de gestos en iOS y Android
   const insets = useSafeAreaInsets()
 
   return (
@@ -64,6 +87,7 @@ export function TabBar() {
       ]}
     >
       {TABS.map((tab) => {
+        // docs: Verifica si la pantalla activa actual pertenece al grupo de esta pestaña
         const active = tab.screens.includes(screen)
         return (
           <TouchableOpacity

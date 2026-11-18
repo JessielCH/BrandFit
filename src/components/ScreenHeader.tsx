@@ -1,30 +1,56 @@
 /**
- * ScreenHeader – encabezado de pantalla con título, subtítulo,
- * botón de retroceso y elemento derecho opcional.
- * Equivalente a <ScreenHeader> del prototipo web.
+ * @file ScreenHeader.tsx
+ * @description Componente molecular de cabecera de pantalla unificada.
+ * Incluye botón opcional de retroceso, título principal en gran escala, subtítulo descriptivo
+ * y ranura derecha personalizable (usada comúnmente para insignias o acciones rápidas).
+ *
+ * @author BrandFit Team
  */
+
 import React from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors, FontSize, Spacing } from '../theme'
 import { AppText as Text } from './AppText'
 
+/**
+ * Propiedades del componente ScreenHeader.
+ */
 type Props = {
+  /** Título principal de la vista */
   title: string
+  /** Subtítulo contextual o descripción corta (opcional) */
   subtitle?: string
+  /** Callback para la navegación de regreso; si se omite, no se renderiza el botón de retroceso */
   onBack?: () => void
+  /** Nodo de React opcional para ubicar en el extremo derecho de la cabecera */
   right?: React.ReactNode
 }
 
+/**
+ * Cabecera estándar para todas las pantallas del flujo móvil de BrandFit.
+ *
+ * @example
+ * ```tsx
+ * <ScreenHeader
+ *   title="Brand Fit Score"
+ *   subtitle="Evaluación de afinidad con arquetipos"
+ *   onBack={() => go('benford')}
+ *   right={<ScoreChip score={85} />}
+ * />
+ * ```
+ */
 export function ScreenHeader({ title, subtitle, onBack, right }: Props) {
   return (
     <View style={styles.wrapper}>
+      {/* docs: Botón de retorno opcional con chevron e indicador textual */}
       {onBack && (
         <TouchableOpacity onPress={onBack} style={styles.backBtn} activeOpacity={0.7}>
           <Ionicons name="chevron-back" size={20} color={Colors.muted} />
           <Text style={styles.backLabel}>Volver</Text>
         </TouchableOpacity>
       )}
+      {/* docs: Fila principal con título, subtítulo y contenido auxiliar a la derecha */}
       <View style={styles.row}>
         <View style={styles.titleWrap}>
           <Text style={styles.title}>{title}</Text>

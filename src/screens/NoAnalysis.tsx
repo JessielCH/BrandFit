@@ -1,17 +1,28 @@
 /**
- * NoAnalysis – estado vacío cuando no hay un creador analizado.
- * Equivalente a <NoAnalysis> del prototipo web.
+ * @file NoAnalysis.tsx
+ * @description Componente de vista para estados vacíos cuando el usuario accede
+ * a pantallas de métricas, análisis o recomendaciones sin haber seleccionado previamente un creador.
+ *
+ * @author BrandFit Team
  */
+
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { useApp } from '../context'
 import { Button, EmptyState } from '../components'
 import { Colors } from '../theme'
 
+/**
+ * Propiedades del componente NoAnalysis.
+ */
 type Props = {
+  /** Tipo de pantalla donde se muestra el estado vacío: análisis general o recomendaciones */
   kind?: 'analysis' | 'recs'
 }
 
+/**
+ * Vista de estado vacío que orienta al usuario hacia la pantalla de inicio para ingresar un creador.
+ */
 export default function NoAnalysis({ kind = 'analysis' }: Props) {
   const { go } = useApp()
   return (
