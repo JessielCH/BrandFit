@@ -1,7 +1,12 @@
 /**
- * RecsScreen – top 3 videos por engagement + formato sugerido.
- * Migrado desde src/brandfit/screens/Recs.tsx del prototipo web.
+ * @file RecsScreen.tsx
+ * @description Pantalla de recomendaciones estratégicas de contenido para la marca.
+ * Aísla los 3 videos de mayor tracción del creador (con tasa de engagement, vistas y tono)
+ * y emite una recomendación accionable sobre el formato específico de contenido más efectivo.
+ *
+ * @author BrandFit Team
  */
+
 import React from 'react'
 import { View, ScrollView, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
@@ -13,9 +18,14 @@ import { Card, ScreenHeader, ToneChip, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 import NoAnalysis from './NoAnalysis'
 
+/**
+ * Pantalla de Recomendaciones: Entrega directrices operativas a la marca para orientar
+ * los formatos de video de la campaña comercial con el creador.
+ */
 export default function RecsScreen() {
   const { creator } = useApp()
 
+  // docs: Si no hay análisis activo en memoria, muestra el estado vacío informativo
   if (!creator) return <NoAnalysis kind="recs" />
 
   // RN-06: Bloqueo de recomendaciones si la cuenta no es auténtica
@@ -38,10 +48,10 @@ export default function RecsScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      {/* 1. Encabezado */}
+      {/* 1. Encabezado de la pantalla */}
       <ScreenHeader title="Qué contenido funciona mejor" subtitle={`@${creator.username}`} />
 
-      {/* 2. Top 3 por engagement */}
+      {/* 2. Lista de los 3 videos con mayor rendimiento orgánico */}
       <Card style={styles.card}>
         <Text style={styles.cardTitle}>Top 3 por engagement</Text>
         {creator.topVideos.map((v, i) => {
@@ -51,7 +61,7 @@ export default function RecsScreen() {
               key={v.title}
               style={[styles.videoRow, i < creator.topVideos.length - 1 && styles.videoBorder]}
             >
-              {/* Miniatura con gradiente */}
+              {/* Miniatura generada con gradiente dinámico e icono de reproducción */}
               <LinearGradient
                 colors={[colorA, colorB]}
                 start={{ x: 0.1, y: 0 }}
@@ -59,35 +69,33 @@ export default function RecsScreen() {
                 style={styles.thumbnail}
               >
                 <Ionicons name="play" size={20} color={Colors.white} />
-                <View style={styles.rankBadge}>
-                  <Text style={styles.rankText}>{i + 1}</Text>
-                </View>
               </LinearGradient>
 
-              {/* Info del video */}
+              {/* Información y métricas del video */}
               <View style={styles.videoInfo}>
-                <Text style={styles.videoTitle} numberOfLines={2}>{v.title}</Text>
+                <Text style={styles.videoTitle} numberOfLines={2}>
+                  {v.title}
+                </Text>
                 <View style={styles.videoMeta}>
-                  <Text style={styles.videoEngagement}>{v.engagement.toFixed(2)}%</Text>
+                  <Text style={styles.videoEngagement}>{v.engagement}% eng.</Text>
+                  <Text style={styles.metaDot}>·</Text>
+                  <Text style={styles.videoViews}>{v.views} vistas</Text>
                   <ToneChip tone={v.tone} />
                 </View>
-                <Text style={styles.videoViews}>{v.views} vistas</Text>
               </View>
             </View>
           )
         })}
       </Card>
 
-      {/* 3. Formato sugerido */}
-      <View style={styles.formatCard}>
-        <View style={styles.formatIconWrap}>
-          <Ionicons name="bulb-outline" size={22} color={Colors.white} strokeWidth={1.8} />
+      {/* 3. Tarjeta de Formato Sugerido para la Marca */}
+      <Card style={styles.card}>
+        <View style={styles.suggestedHeader}>
+          <Ionicons name="bulb-outline" size={20} color={Colors.primary} />
+          <Text style={styles.cardTitle}>Formato sugerido</Text>
         </View>
-        <View style={styles.formatBody}>
-          <Text style={styles.formatTitle}>Formato sugerido</Text>
-          <Text style={styles.formatText}>{creator.format}</Text>
-        </View>
-      </View>
+        <Text style={styles.suggestedBody}>{creator.format}</Text>
+      </Card>
     </ScrollView>
   )
 }
@@ -96,88 +104,86 @@ const styles = StyleSheet.create({
   flex: { flex: 1, backgroundColor: Colors.bg },
   scroll: { flex: 1, backgroundColor: Colors.bg },
   content: {
-    paddingHorizontal: Spacing['2xl'],
     paddingBottom: Spacing['3xl'],
-    gap: 16,
   },
-
-  // Fraude
-  fraudWrap: {
+  card: {
     marginHorizontal: Spacing['2xl'],
-    borderRadius: Radius.lg,
-    borderWidth: 1,
-    borderColor: Colors.dangerBorder,
-    backgroundColor: '#FEF2F2',
-    padding: 16,
+    padding: Spacing['2xl'],
+    marginBottom: Spacing.xl,
   },
-  fraudText: { fontSize: FontSize.base, color: Colors.dangerText, lineHeight: FontSize.base * 1.5 },
-
-  // Card top 3
-  card: { padding: 20, gap: 0 },
-  cardTitle: { fontSize: FontSize.base, fontWeight: '600', color: Colors.ink, marginBottom: 8 },
-
-  // Video row
+  cardTitle: {
+    fontSize: FontSize.lg,
+    fontWeight: '600',
+    color: Colors.ink,
+    marginBottom: Spacing.lg,
+  },
   videoRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-    paddingVertical: 16,
+    gap: 14,
+    paddingVertical: 12,
   },
-  videoBorder: { borderBottomWidth: 1, borderBottomColor: Colors.line },
-
+  videoBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.line,
+  },
   thumbnail: {
-    width: 64,
-    height: 84,
+    width: 68,
+    height: 68,
     borderRadius: Radius.md,
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
   },
-  rankBadge: {
-    position: 'absolute',
-    top: 6,
-    left: 6,
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    borderRadius: 4,
-    paddingHorizontal: 5,
-    paddingVertical: 1,
+  videoInfo: {
+    flex: 1,
+    justifyContent: 'center',
+    gap: 6,
   },
-  rankText: { fontSize: 11, fontWeight: '700', color: Colors.ink },
-
-  videoInfo: { flex: 1, minWidth: 0 },
   videoTitle: {
     fontSize: FontSize.base,
     fontWeight: '500',
     color: Colors.ink,
     lineHeight: FontSize.base * 1.35,
   },
-  videoMeta: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 8 },
-  videoEngagement: { fontSize: FontSize.lg, fontWeight: '700', color: Colors.primary },
-  videoViews: { fontSize: FontSize.sm, color: Colors.muted, marginTop: 4 },
-
-  // Formato sugerido
-  formatCard: {
+  videoMeta: {
     flexDirection: 'row',
-    gap: 12,
-    backgroundColor: Colors.primary,
-    borderRadius: Radius.lg,
-    padding: 20,
+    alignItems: 'center',
+    gap: 6,
   },
-  formatIconWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: Radius.md,
-    backgroundColor: 'rgba(255,255,255,0.15)',
+  videoEngagement: {
+    fontSize: FontSize.sm,
+    fontWeight: '600',
+    color: Colors.primary,
+  },
+  metaDot: {
+    fontSize: FontSize.xs,
+    color: Colors.muted,
+  },
+  videoViews: {
+    fontSize: FontSize.sm,
+    color: Colors.muted,
+  },
+  suggestedHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: Spacing.sm,
+  },
+  suggestedBody: {
+    fontSize: FontSize.base,
+    color: Colors.muted,
+    lineHeight: FontSize.base * 1.5,
+  },
+  fraudWrap: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    flexShrink: 0,
+    paddingHorizontal: Spacing['3xl'],
   },
-  formatBody: { flex: 1 },
-  formatTitle: { fontSize: FontSize.base, fontWeight: '600', color: Colors.white },
-  formatText: {
-    marginTop: 4,
-    fontSize: FontSize.sm + 1,
-    color: 'rgba(255,255,255,0.9)',
-    lineHeight: (FontSize.sm + 1) * 1.6,
+  fraudText: {
+    fontSize: FontSize.base,
+    color: Colors.dangerText,
+    textAlign: 'center',
+    lineHeight: FontSize.base * 1.4,
   },
 })

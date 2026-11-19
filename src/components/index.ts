@@ -1,6 +1,10 @@
 /**
- * Barrel export de todos los componentes UI compartidos de BrandFit.
+ * @file index.ts
+ * @description Exportador centralizado (barrel export) de la biblioteca de componentes atómicos y moleculares de BrandFit.
+ *
+ * @author BrandFit Team
  */
+
 export { Card } from './Card'
 export { Button } from './Button'
 export { Chip, ScoreChip, ToneChip } from './Chip'

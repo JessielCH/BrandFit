@@ -1,18 +1,39 @@
 /**
  * EmptyState – estado vacío con ícono, título, cuerpo y acción opcional.
  */
+
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 import { AppText as Text } from './AppText'
 
+/**
+ * Propiedades del componente EmptyState.
+ */
 type Props = {
+  /** Icono o elemento gráfico central */
   icon: React.ReactNode
+  /** Título principal del estado vacío */
   title: string
+  /** Mensaje explicativo o instrucción para el usuario */
   body: string
+  /** Botón o elemento de llamada a la acción (opcional) */
   action?: React.ReactNode
 }
 
+/**
+ * Vista centrada para indicar que no hay contenido cargado o que se requiere una acción inicial.
+ *
+ * @example
+ * ```tsx
+ * <EmptyState
+ *   icon={<SearchIcon />}
+ *   title="No hay análisis activo"
+ *   body="Busca un creador en la pantalla de inicio para comenzar."
+ *   action={<Button onPress={goHome}>Ir al Inicio</Button>}
+ * />
+ * ```
+ */
 export function EmptyState({ icon, title, body, action }: Props) {
   return (
     <View style={styles.container}>
