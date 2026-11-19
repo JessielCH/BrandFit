@@ -64,6 +64,8 @@ export default function HomeScreen() {
               placeholderTextColor={Colors.placeholder}
               autoCapitalize="none"
               autoCorrect={false}
+              returnKeyType="search"
+              onSubmitEditing={submit}
               style={styles.input}
             />
           </View>
