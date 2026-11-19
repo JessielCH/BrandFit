@@ -49,18 +49,6 @@ flowchart TD
 
 ## 3. Metodologia DDD: Bounded Contexts
 
-```mermaid
-flowchart TD
-    BC1["BC1: Auditoria de Autenticidad\nHome · Progress · Benford\nValidar username RN-01 · Detectar anomalias RN-02"]
-    BC2["BC2: Afinidad y Psicometria\nScore · BigFive\nBrand Fit Score 0-100 · Bono RN-04 · Brecha Big Five RN-05"]
-    BC3["BC3: Recomendaciones\nRecs\nTop 3 videos por engagement · Formato sugerido"]
-    BLQ["Bloqueo de Recomendaciones\nAlerta de Fraude · Guardian RN-06"]
-
-    BC1 -->|"authentic = true"| BC2
-    BC2 --> BC3
-    BC1 -->|"authentic = false"| BLQ
-```
-
 | Bounded Context | Responsabilidad del Negocio | Pantallas |
 |---|---|---|
 | **BC1** Auditoria de Autenticidad | Validar `@username`, auditar 10 videos, dictaminar autenticidad matematica | Home → Progress → Benford |
