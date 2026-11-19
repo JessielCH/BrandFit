@@ -3,7 +3,7 @@
  * Equivalente al <Card> del prototipo web.
  */
 import React from 'react'
-import { View, StyleSheet, type StyleProp, type ViewStyle } from 'react-native'
+import { View, StyleSheet, Platform, type StyleProp, type ViewStyle } from 'react-native'
 import { Colors, Radius, Shadow } from '../theme'
 
 type Props = {
@@ -19,8 +19,19 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.white,
     borderRadius: Radius.lg,
-    borderWidth: 1,
+    borderWidth: StyleSheet.hairlineWidth,
     borderColor: Colors.line,
     ...Shadow.card,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#0F172A',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.06,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
 })
