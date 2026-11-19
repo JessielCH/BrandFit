@@ -1,0 +1,26 @@
+[33mbcf8f1b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeat/prototipo-liz[m[33m, [m[1;31morigin/feat/prototipo-liz[m[33m)[m chore(repo): remove legacy BrandFit-Liz subfolder after project restructure
+[33mfbbd850[m refactor(application): delegate finishAnalysis to resolveAuditedCreator in infrastructure
+[33m4a51d14[m refactor(screens): wire BigFiveScreen trait bars to evaluateTraitAlignment RN-05
+[33m16ef7db[m refactor(screens): wire ScoreScreen affinity chip to affinityVerdictLabel RN-03b
+[33m6bb6673[m Merge remote-tracking branch 'origin/main' into feat/prototipo-liz
+[33m968e506[m feat(screens): enforce RN-06 recommendation guard; add DDD architecture docs
+[33m2fc1e71[m feat(screens): highlight misaligned Big Five traits with amber bars using RN-05
+[33m7498384[m feat(screens): display affinity verdict label in ScoreScreen using RN-03b
+[33m9746f06[m refactor(screens): connect HomeScreen submit to RN-01 username validation rule
+[33m0769f53[m refactor(application): wire AppContext finishAnalysis through infrastructure repository
+[33m6afd77f[m refactor(data): migrate data layer to re-export from domain for backward compatibility
+[33m93dbb2f[m feat(domain): add barrel export for domain layer public API
+[33m02f2d44[m feat(domain): implement business rules RN-01 through RN-06 as pure TS domain services
+[33m1ce0c32[m feat(domain): scaffold domain models – Creator aggregate root and value objects
+[33m84b17f3[m feat(infrastructure): implement in-memory CreatorRepository resolveAuditedCreator
+[33m589df81[m[33m ([m[1;32mrefactor/ddd-architecture[m[33m)[m Remove Atomic Design section from README
+[33m4bec901[m docs: add business rationale, update team names, add screenshot showcase and universal JSDoc comments
+[33m6c3fc91[m chore(git): clean up ignore patterns for design prototypes and temp images
+[33ma411576[m docs: streamline README scope as UI prototype, clean team listing, and optimize gitignore
+[33mf6aeac1[m docs: comprehensive professional README with business model, team, and architecture
+[33maf51b93[m refactor(project): move mobile app to repository root and rename to BrandFit
+[33m9154f11[m feat(ui): unify Inter typography across all components and add testing tip
+[33m3bb581a[m feat(screens): implement complete screen flow and Inter typography
+[33mf8abff7[m feat(components): add shared UI component library
+[33me214a6f[m feat: initial React Native project structure for BrandFit
+[33me184522[m chore: first commit

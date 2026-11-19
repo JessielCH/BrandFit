@@ -1,0 +1,20 @@
+[33mb904829[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeat/prototipo-liz[m[33m, [m[1;31morigin/feat/prototipo-liz[m[33m)[m refactor: consolidate DDD layers and remove legacy duplicates
+[33me37df67[m feat(domain): implement RN-05 psychometric trait gap tolerance evaluator
+[33mc98c603[m feat(domain): implement RN-03b affinity verdict label generator
+[33m3a3fbc3[m feat(domain): enhance RN-01 username sanitization and validation service
+[33m26c56ab[m refactor(domain): add BC3 content recommendation models to domain barrel
+[33md183000[m feat(domain): specify BC3 editorial content and recommendation models
+[33ma753311[m refactor(domain): expose ports and bounded context types in domain barrel
+[33me6af5c2[m feat(infrastructure): implement InMemoryCreatorRepository adapting domain port
+[33ma267bec[m feat(domain): specify BC2 psychometric alignment and archetype models"
+[33m91c4132[m feat(domain): specify BC1 authenticity audit models and value objects
+[33mdbe3bb4[m feat(domain): define CreatorRepositoryPort interface in domain ports
+[33m6c3fc91[m chore(git): clean up ignore patterns for design prototypes and temp images
+[33ma411576[m docs: streamline README scope as UI prototype, clean team listing, and optimize gitignore
+[33mf6aeac1[m docs: comprehensive professional README with business model, team, and architecture
+[33maf51b93[m refactor(project): move mobile app to repository root and rename to BrandFit
+[33m9154f11[m feat(ui): unify Inter typography across all components and add testing tip
+[33m3bb581a[m feat(screens): implement complete screen flow and Inter typography
+[33mf8abff7[m feat(components): add shared UI component library
+[33me214a6f[m feat: initial React Native project structure for BrandFit
+[33me184522[m chore: first commit

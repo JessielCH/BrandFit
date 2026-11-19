@@ -1,9 +1,5 @@
 /**
- * @file SectionTitle.tsx
- * @description Componente atómico de subtítulo de sección en mayúsculas (estilo overline).
- * Mantiene la jerarquía visual del prototipo y admite una acción interactiva a la derecha.
- *
- * @author BrandFit Team
+ * SectionTitle – encabezado de sección en mayúsculas pequeñas.
  */
 
 import React from 'react'
@@ -41,16 +37,6 @@ export function SectionTitle({ children, action }: Props) {
 }
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 12,
-  },
-  label: {
-    fontSize: FontSize.sm,
-    fontWeight: '600',
-    color: Colors.muted,
-    letterSpacing: 0.6,
-  },
+  row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
+  label: { fontSize: FontSize.sm, fontWeight: '600', color: Colors.muted, letterSpacing: 0.6 },
 })

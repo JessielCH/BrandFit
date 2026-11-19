@@ -1,9 +1,5 @@
 /**
- * @file EmptyState.tsx
- * @description Componente molecular para representar estados vacíos o ausencia de datos.
- * Incluye un contenedor con icono destacado, título, cuerpo descriptivo y botón de acción opcional.
- *
- * @author BrandFit Team
+ * EmptyState – estado vacío con ícono, título, cuerpo y acción opcional.
  */
 
 import React from 'react'
@@ -51,36 +47,15 @@ export function EmptyState({ icon, title, body, action }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: Spacing['4xl'],
-    paddingBottom: Spacing['3xl'],
+    flex: 1, alignItems: 'center', justifyContent: 'center',
+    paddingHorizontal: Spacing['4xl'], paddingBottom: Spacing['3xl'],
   },
   iconWrap: {
-    width: 56,
-    height: 56,
-    borderRadius: Radius.xl,
-    backgroundColor: Colors.primarySoft,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: Spacing.xl,
+    width: 56, height: 56, borderRadius: Radius.xl,
+    backgroundColor: Colors.primarySoft, alignItems: 'center',
+    justifyContent: 'center', marginBottom: Spacing.xl,
   },
-  title: {
-    fontSize: FontSize.lg,
-    fontWeight: '600',
-    color: Colors.ink,
-    textAlign: 'center',
-  },
-  body: {
-    marginTop: 6,
-    fontSize: FontSize.base,
-    color: Colors.muted,
-    textAlign: 'center',
-    lineHeight: FontSize.base * 1.5,
-  },
-  actionWrap: {
-    marginTop: 24,
-    width: '100%',
-  },
+  title: { fontSize: FontSize.lg, fontWeight: '600', color: Colors.ink, textAlign: 'center' },
+  body: { marginTop: 6, fontSize: FontSize.base, color: Colors.muted, textAlign: 'center', lineHeight: FontSize.base * 1.5 },
+  actionWrap: { marginTop: 24, width: '100%' },
 })
