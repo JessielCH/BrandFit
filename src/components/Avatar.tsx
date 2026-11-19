@@ -24,6 +24,9 @@ export function Avatar({ username, hue, size = 40 }: Props) {
       colors={[colorA, colorB]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
+      accessible
+      accessibilityRole="image"
+      accessibilityLabel={`Avatar de ${username}`}
       style={[styles.circle, { width: size, height: size, borderRadius: size / 2 }]}
     >
       <Text style={[styles.initials, { fontSize }]}>{initials}</Text>
@@ -39,6 +42,9 @@ export function AvatarPlain({ username, hue, size = 40 }: Props) {
 
   return (
     <View
+      accessible
+      accessibilityRole="image"
+      accessibilityLabel={`Avatar de ${username}`}
       style={[
         styles.circle,
         { width: size, height: size, borderRadius: size / 2, backgroundColor: colorA },
@@ -58,5 +64,7 @@ const styles = StyleSheet.create({
   initials: {
     color: '#FFFFFF',
     fontWeight: '600',
+    textAlign: 'center',
+    includeFontPadding: false,
   },
 })
