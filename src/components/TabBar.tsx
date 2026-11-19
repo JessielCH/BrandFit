@@ -71,6 +71,8 @@ export function TabBar() {
             onPress={() => go(tab.target)}
             style={styles.tab}
             activeOpacity={0.7}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: active }}
           >
             <Ionicons
               name={active ? tab.iconActive : tab.iconInactive}
