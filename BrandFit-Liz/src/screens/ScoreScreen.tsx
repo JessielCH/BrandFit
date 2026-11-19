@@ -15,8 +15,8 @@ import {
 import Svg, { Circle } from 'react-native-svg'
 import { Ionicons } from '@expo/vector-icons'
 import { useApp } from '../context'
-import { ARCHETYPES } from '../data/constants'
-import { archetypeLabel, engagementBonus } from '../data/helpers'
+import { ARCHETYPES } from '../domain'
+import { archetypeLabel, engagementBonus, affinityVerdictLabel } from '../domain'
 import { Avatar, Button, Card, Chip, ScreenHeader, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 import NoAnalysis from './NoAnalysis'
@@ -123,6 +123,10 @@ export default function ScoreScreen() {
           <View style={styles.scoreOverlay}>
             <Text style={styles.scoreNumber}>{score}</Text>
             <Text style={styles.scoreOf}>de 100</Text>
+            {/* RN-03b: Veredicto de Afinidad */}
+            <View style={styles.verdictBadge}>
+              <Text style={styles.verdictText}>{affinityVerdictLabel(score)}</Text>
+            </View>
           </View>
         </View>
 
@@ -221,6 +225,14 @@ const styles = StyleSheet.create({
     letterSpacing: -2,
   },
   scoreOf: { fontSize: FontSize.sm, color: Colors.muted },
+  verdictBadge: {
+    marginTop: 6,
+    backgroundColor: Colors.primarySoft,
+    borderRadius: 99,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+  },
+  verdictText: { fontSize: FontSize.xs + 1, fontWeight: '600', color: Colors.primaryDark },
   scoreFit: { fontSize: FontSize.lg, fontWeight: '600', color: Colors.ink },
   scoreCaption: { fontSize: FontSize.sm, color: Colors.muted },
 
