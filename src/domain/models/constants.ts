@@ -117,6 +117,29 @@ export const CREATORS: Creator[] = [
     lastArchetype: 'bienestar',
     hue: 172,
   },
+  {
+    username: 'sofiatech.ai',
+    name: 'Sofía Tech',
+    authentic: true,
+    confidence: 94,
+    benfordObserved: [30.5, 17.2, 12.8, 9.5, 8.1, 6.5, 5.7, 5.2, 4.5],
+    followers: '28.9K',
+    engagement: 8.35,
+    posts: 10,
+    avgViews: '84.120',
+    tone: { pos: 8, neu: 2, neg: 0 },
+    bigFive: [84, 82, 64, 60, 24],
+    scores: { tech: 88, bienestar: 69, entretenimiento: 72, finanzas: 76, causas: 71 },
+    topVideos: [
+      { title: '3 herramientas de IA que uso en la universidad', engagement: 12.1, views: '142K', tone: 'positivo', hue: 155 },
+      { title: 'Armando mi setup minimalista de programación',   engagement: 8.64, views: '91.4K', tone: 'positivo', hue: 168 },
+      { title: '¿Vale la pena actualizar tu laptop este año?',   engagement: 7.45, views: '68.7K', tone: 'neutro',   hue: 145 },
+    ],
+    format: 'Tutoriales prácticos de 45 s con demostración en pantalla: 12.1% de engagement vs 8.3% promedio.',
+    analyzedAt: 'Ayer, 14:15',
+    lastArchetype: 'tech',
+    hue: 152,
+  },
 ]
 
 /** Creador con Patrón Sospechoso — usado cuando RN-02 detecta fraude */
