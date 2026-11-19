@@ -1,102 +1,105 @@
-# 📘 Arquitectura de Software y Metodología DDD — BrandFit Mobile
+# Arquitectura de Software y Metodologia DDD — BrandFit Mobile
 
-> React Native + Expo (TypeScript). Diseño desacoplado en capas con inversión de dependencias.
-
----
-
-## 1. Patrón Arquitectónico vs. Metodología de Diseño
-
-Para garantizar mantenibilidad, testabilidad y escalabilidad, el proyecto establece una clara distinción técnica:
-
-* **Patrón de Arquitectura de Software:** **Arquitectura en Capas (Layered Architecture) / Arquitectura Limpia (Clean Architecture)**.
-  * Desacoplamiento estricto de responsabilidades en 4 capas.
-  * **Regla de Inversión de Dependencias:** El flujo de dependencias apunta siempre hacia adentro; el núcleo del Dominio es 100% TypeScript puro (0% acoplamiento a React Native, librerías de UI o frameworks externos).
-  * La infraestructura actúa como capa adaptadora mediante el patrón Repositorio.
-* **Metodología de Modelado:** **Domain-Driven Design (DDD)**.
-  * Enfoque metodológico centrado en el negocio para comprender el problema del marketing de influencers, delimitar subdominios mediante **Bounded Contexts**, unificar la comunicación mediante un **Lenguaje Ubicuo** e implementar modelos tácticos (Aggregate Root, Value Objects y Domain Services).
+> React Native + Expo + TypeScript. Arquitectura en Capas con Inversion de Dependencias.
 
 ---
 
-## 2. Estructura de Capas de la Arquitectura
+## 1. Patron Arquitectonico vs. Metodologia de Diseno
 
-```
-src/
-├── domain/                      🧠 Capa de Dominio (TypeScript puro — 0% dependencias de UI)
-│   ├── models/
-│   │   ├── types.ts             Aggregate Root (Creator), Value Objects y tipos de negocio
-│   │   └── constants.ts        Invariantes del dominio: ARCHETYPES, TRAITS, IDEALS, BENFORD_EXPECTED
-│   ├── services/
-│   │   └── rules.ts            Reglas de Negocio puras RN-01 a RN-06
-│   └── index.ts                Barrel export del dominio
-│
-├── infrastructure/              🗄️ Capa de Infraestructura (Adaptadores y Repositorios)
-│   ├── repositories/
-│   │   └── creatorRepository.ts  Implementación de persistencia/consulta en memoria: resolveAuditedCreator(username)
-│   └── index.ts
-│
-├── application/ (context/)      ⚙️ Capa de Aplicación (Casos de Uso y Orquestación)
-│   └── AppContext.tsx           startAnalysis, finishAnalysis, openCreator, setArchetype
-│
-└── screens/                     📱 Capa de Presentación (UI por Bounded Context)
-    ├── HomeScreen.tsx           BC1: búsqueda + RN-01 (validación de handle)
-    ├── ProgressScreen.tsx       BC1: pipeline visual de auditoría
-    ├── BenfordScreen.tsx        BC1: veredicto de autenticidad + gráfico Benford
-    ├── ScoreScreen.tsx          BC2: Brand Fit Score + veredicto RN-03b
-    ├── BigFiveScreen.tsx        BC2: brecha psicométrica RN-05 (barras ámbar)
-    └── RecsScreen.tsx           BC3: top 3 videos + bloqueo RN-06
-```
+Antes de describir la estructura tecnica, se establece la distincion conceptual fundamental:
 
----
-
-## 3. Metodología DDD: Bounded Contexts
-
-```
-┌──────────────────────────────────────────────────────────────┐
-│                   APLICACIÓN MÓVIL BRANDFIT                  │
-│                                                              │
-│  ┌────────────────┐  ┌──────────────────┐  ┌─────────────┐  │
-│  │ BC1: Auditoría │  │ BC2: Evaluación  │  │ BC3:        │  │
-│  │ de Autenticidad│─▶│ de Afinidad &    │─▶│ Inteligencia│  │
-│  │ (Fraude/Benford│  │ Psicometría      │  │ de Contenido│  │
-│  └────────────────┘  └──────────────────┘  └─────────────┘  │
-└──────────────────────────────────────────────────────────────┘
-```
-
-| Bounded Context | Responsabilidad en el Negocio | Pantallas / Componentes |
+| Concepto | Tipo | Descripcion |
 |---|---|---|
-| **BC1** Fraud & Benford Audit | Validar @username, auditar 10 videos, dictaminar autenticidad matemática. | Home → Progress → Benford |
-| **BC2** Brand Fit & Psychometrics | Calcular Brand Fit Score (0-100), bono de engagement y brecha psicométrica Big Five. | Score → BigFive |
-| **BC3** Content Recommendations | Top 3 videos por engagement, tono editorial y formato sugerido táctico. | Recs |
+| **Arquitectura en Capas (Layered / Clean Architecture)** | Patron de Arquitectura de Software | Define como se organizan y comunican los modulos del sistema. Establece fronteras, flujo de dependencias e independencia del dominio. |
+| **Domain-Driven Design (DDD)** | Metodologia de Diseno | Enfoque centrado en el negocio para comprender el problema, delimitar subdominios (Bounded Contexts), unificar el vocabulario (Lenguaje Ubicuo) e implementar modelos tacticos. |
+
+---
+
+## 2. Arquitectura en Capas
+
+```mermaid
+graph TD
+    P["Capa de Presentacion\nsrc/screens · src/components · src/navigation\nInterfaces nativas por Bounded Context"]
+    A["Capa de Aplicacion\nsrc/context · AppContext.tsx\nCasos de uso · Orquestacion · Estado global"]
+    I["Capa de Infraestructura\nsrc/infrastructure\nRepositorios en memoria · Adaptadores de datos"]
+    D["Capa de Dominio\nsrc/domain\nTypeScript puro · 0% dependencias de UI\nAggregate Root · Value Objects · Reglas RN-01 a RN-06"]
+
+    P --> A
+    A --> I
+    A --> D
+    I --> D
+```
+
+### Principios de la Arquitectura
+
+| Principio | Implementacion |
+|---|---|
+| **Inversion de Dependencias** | El flujo de dependencias apunta siempre hacia el nucleo (dominio). Ninguna capa interna importa capas externas. |
+| **Dominio independiente** | `src/domain/` es 100% TypeScript puro; no importa React Native, Expo ni ninguna libreria de UI. |
+| **Infraestructura como adaptador** | `creatorRepository.ts` implementa la consulta de datos en memoria con el mismo contrato que consumira el scraper real. |
+| **Presentacion desacoplada** | Pantallas y componentes consumen solo servicios de dominio y estado de aplicacion, sin logica de negocio embebida. |
+
+### Responsabilidades por Capa
+
+| Capa | Ubicacion | Responsabilidad |
+|---|---|---|
+| **Presentacion** | `src/screens`, `src/components`, `src/navigation` | Renderizado de interfaces organizadas por Bounded Context. Atomic Design. |
+| **Aplicacion** | `src/context/AppContext.tsx` | Orquestacion de casos de uso: `startAnalysis`, `finishAnalysis`, `setArchetype` |
+| **Infraestructura** | `src/infrastructure/repositories/creatorRepository.ts` | `resolveAuditedCreator(username)` — resolucion de la entidad auditada en memoria |
+| **Dominio** | `src/domain/` | Modelos de negocio, invariantes y reglas puras RN-01 a RN-06 |
+
+---
+
+## 3. Metodologia DDD: Bounded Contexts
+
+```mermaid
+flowchart LR
+    BC1["BC1 — Auditoria de Autenticidad\nHome · Progress · Benford\n---\nValidar username RN-01\nDetectar anomalia RN-02\nPipeline de auditoria\nVeredicto autenticidad"]
+    BC2["BC2 — Afinidad y Psicometria\nScore · BigFive\n---\nBrand Fit Score 0-100\nBono de engagement RN-04\nBrecha Big Five RN-05\nArquetipos corporativos"]
+    BC3["BC3 — Recomendaciones\nRecs\n---\nTop 3 videos por engagement\nTono editorial\nFormato sugerido\nGuardian RN-06"]
+
+    BC1 -->|"authentic = true"| BC2
+    BC2 --> BC3
+    BC1 -->|"authentic = false"| X["RN-06 bloquea BC3"]
+```
+
+| Bounded Context | Responsabilidad del Negocio | Pantallas |
+|---|---|---|
+| **BC1** Auditoria de Autenticidad | Validar `@username`, auditar 10 videos, dictaminar autenticidad matematica | Home → Progress → Benford |
+| **BC2** Afinidad y Psicometria | Calcular Brand Fit Score (0-100), bono de engagement, brecha psicometrica Big Five | Score → BigFive |
+| **BC3** Recomendaciones de Contenido | Top 3 videos por engagement, tono editorial y formato sugerido tactico | Recs |
 
 ---
 
 ## 4. Lenguaje Ubicuo (Ubiquitous Language)
 
-| Término de Negocio | En el código | Definición |
+| Termino de Negocio | En el Codigo | Definicion |
 |---|---|---|
-| Creador Auditado | `Creator` *(Aggregate Root)* | Influencer de TikTok bajo análisis |
-| Arquetipo de Marca | `Archetype` / `ArchetypeId` | Identidad corporativa (`tech`, `bienestar`, etc.) |
-| Distribución de Benford | `BENFORD_EXPECTED` / `benfordObserved` | Curva logarítmica teórica vs. observada |
-| Veredicto de Autenticidad | `authentic` / `confidence` | Booleano + porcentaje de confianza estadística |
-| Brand Fit Score | `scores: Record<ArchetypeId, number>` | Índice de compatibilidad 0-100 |
-| Perfil Psicométrico Big Five | `TRAITS` / `bigFive` | Rasgos OCEAN del creador |
-| Vector Ideal del Arquetipo | `IDEALS` | Big Five de referencia por arquetipo |
-| Brecha Psicométrica | `evaluateTraitAlignment()` | Diferencia absoluta creador vs. ideal |
-| Bono de Tracción | `engagementBonus()` | Puntos extra por engagement rate |
-| Tono Editorial | `Tone` (`positivo` / `neutro` / `negativo`) | Clasificación emocional del contenido |
-| Muestra de Video Destacado | `Video` (`topVideos`) | Value Object con título, engagement, vistas, tono |
-| Formato Sugerido | `format` | Recomendación táctica para la campaña |
+| Creador Auditado | `Creator` *(Aggregate Root)* | Entidad principal que encapsula identidad, metricas, rasgos psicologicos y evaluaciones del influencer |
+| Arquetipo de Marca | `Archetype` / `ArchetypeId` | Perfil de identidad corporativa: `tech`, `bienestar`, `entretenimiento`, `finanzas`, `causas` |
+| Distribucion de Benford | `BENFORD_EXPECTED` / `benfordObserved` | Frecuencia teorica vs. real de primeros digitos en contadores de interaccion |
+| Veredicto de Autenticidad | `authentic: boolean`, `confidence: number` | Determinacion binaria de legitimidad de la cuenta y porcentaje de certidumbre estadistica |
+| Brand Fit Score | `scores: Record<ArchetypeId, number>` | Puntuacion de compatibilidad normalizada 0-100 |
+| Perfil Psicometrico Big Five | `TRAITS` / `bigFive: number[]` | Vector OCEAN: Apertura, Responsabilidad, Extraversion, Amabilidad, Neuroticismo |
+| Vector Ideal del Arquetipo | `IDEALS: Record<ArchetypeId, number[]>` | Puntuaciones psicometricas de referencia por arquetipo corporativo |
+| Brecha Psicometrica | `evaluateTraitAlignment()` | Distancia absoluta creador vs. ideal; activa barra ambar si excede tolerancia |
+| Bono de Traccion | `engagementBonus()` | Puntos adicionales al score segun la tasa organica de interaccion |
+| Tono Editorial | `Tone` | Clasificacion afectiva del contenido: `positivo`, `neutro`, `negativo` |
+| Video Destacado | `Video` *(Value Object)* | Titulo, vistas formateadas, engagement rate y tono de un video de la muestra |
+| Formato Sugerido | `format: string` | Recomendacion tactica de formato de contenido para maximizar el impacto de la campana |
 
 ---
 
-## 5. Reglas de Negocio (Domain Services — `src/domain/services/rules.ts`)
+## 5. Reglas de Negocio — Domain Services
 
-| ID | Función | Descripción |
-|---|---|---|
-| **RN-01** | `validateCreatorUsername(rawInput)` | Username: 2-24 chars, `/^[a-zA-Z0-9._]{2,24}$/` |
-| **RN-02** | `hasSuspiciousPattern(username)` | Detecta bots por palabras clave (SUSPICIOUS_HINTS) |
-| **RN-03a** | `scoreTone(score)` | ≥65→success / ≥45→warning / <45→danger |
-| **RN-03b** | `affinityVerdictLabel(score)` | ≥70→"Excelente afinidad" / <70→"Buena afinidad" |
-| **RN-04** | `engagementBonus(engagement)` | ≥7%→+5 / ≥5%→+3 / ≥3%→+1 / <3%→0 |
-| **RN-05** | `evaluateTraitAlignment(v, target)` | diff≤15→isAligned=true (barra verde), diff>15→ámbar |
-| **RN-06** | `canShowRecommendations(authentic)` | Bloquea Recs si `authentic === false` |
+Implementadas como funciones TypeScript puras en `src/domain/services/rules.ts`. Sin efectos secundarios. Sin importaciones de React Native.
+
+| Regla | Funcion | Entrada | Comportamiento |
+|---|---|---|---|
+| **RN-01** | `validateCreatorUsername(rawInput)` | `string` | Sanitiza `@` y espacios. Valida `/^[a-zA-Z0-9._]{2,24}$/`. Retorna `{valid, clean, error?}` |
+| **RN-02** | `hasSuspiciousPattern(username)` | `string` | Evalua si el handle coincide con `SUSPICIOUS_HINTS` (bots, granjas infladas). Retorna `boolean` |
+| **RN-03a** | `scoreTone(score)` | `number` | `>= 65` → `'success'` · `>= 45` → `'warning'` · `< 45` → `'danger'` |
+| **RN-03b** | `affinityVerdictLabel(score)` | `number` | `>= 70` → `"Excelente afinidad"` · `< 70` → `"Buena afinidad"` |
+| **RN-04** | `engagementBonus(engagement)` | `number` | `>= 7%` → +5 pts · `>= 5%` → +3 pts · `>= 3%` → +1 pt · `< 3%` → 0 |
+| **RN-05** | `evaluateTraitAlignment(val, target)` | `number, number` | Si `|target - val| <= 15` → alineado (verde). Si `> 15` → desalineado (ambar) |
+| **RN-06** | `canShowRecommendations(authentic)` | `boolean` | Si `authentic === false` bloquea `RecsScreen` para proteger el presupuesto de la marca |
