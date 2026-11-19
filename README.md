@@ -17,91 +17,59 @@
 ## Alcance del Repositorio
 
 > [!NOTE]
-> Este repositorio contiene exclusivamente el **prototipo frontend de la aplicacion movil**, desarrollado en **React Native con Expo SDK 58**. Implementa un patron de **Arquitectura en Capas (Layered / Clean Architecture)** y un modelado conceptual basado en la **metodologia Domain-Driven Design (DDD)**. Opera con datos simulados (mock data) tipados en memoria para validar la experiencia de usuario y las reglas de negocio antes de la integracion con servicios de backend y scraping.
+> Este repositorio contiene exclusivamente el **prototipo frontend de la aplicacion movil**, desarrollado en **React Native con Expo SDK 58**. Opera con datos simulados (mock data) tipados en memoria para representar el flujo de usuario y la experiencia de navegacion sin conexion a scraper ni servicios de backend.
 
 ---
 
-## 1. Planteamiento del Problema y Adaptabilidad Visual
+## 1. Planteamiento del Problema
 
-### Problema y Origen de Datos
+### El Problema
+En el marketing de influencers B2B, las decisiones de contratacion se fundamentan frecuentemente en metricas superficiales (seguidores y likes) vulnerables a manipulacion artificial mediante bots. Esto genera inversiones fallidas, falta de engagement organico real y riesgos reputacionales por desalineacion entre los valores del creador y el arquetipo de la marca.
 
-En el marketing de influencers B2B, las decisiones de contratacion suelen basarse en metricas de vanidad facilmente manipulables (compra de seguidores o likes), generando inversiones fallidas y desalineacion de valores entre marca y creador. 
+**BrandFit** transforma este proceso en una decision guiada por datos objetivos: valida la autenticidad matematica de la audiencia, mide el ajuste psicologico entre creador y marca, y recomienda los formatos de contenido de mayor traccion.
 
-**BrandFit** audita la autenticidad y compatibilidad mediante datos publicos extraidos de perfiles de TikTok:
-* Identificador `@username`, conteo de seguidores y metricas de interaccion.
-* Muestra de los ultimos 10 videos (vistas, likes, comentarios, engagement rate).
-* Distribucion de primeros digitos en interacciones para analisis forense mediante la **Ley de Benford**.
-* Analisis de tono de contenido y clasificacion de formatos de video.
+### Origen de la Informacion
+Los datos analizados corresponden a la huella digital publica de creadores en TikTok:
+* Identificador `@username`, nombre visible y total de seguidores.
+* Muestra de los ultimos 10 videos (vistas, likes, comentarios y tasa de engagement organico).
+* Frecuencia de distribucion de primeros digitos para analisis forense mediante la **Ley de Benford**.
+* Tonalidad editorial y categorizacion de formatos de video.
 
-### Adaptacion a Relaciones de Aspecto (9:16, 16:9 y 1:1)
-
-La interfaz se diseno contemplando resolucion, densidad de pixeles (DPI/PPI) y relaciones de aspecto en dispositivos moviles:
-
-| Relacion | Contexto de Uso | Consideraciones Tecnicas y Adaptabilidad |
-|---|---|---|
-| **9:16** (Vertical Movil) | Vistas principales de navegacion y miniaturas estilo Reel/TikTok | Formato nativo de smartphones modernos. Se implementa con `SafeAreaView` (`react-native-safe-area-context`) para aislar notches y Dynamic Island, junto con `ScrollView` elásticos y `KeyboardAvoidingView` para evitar desbordes. |
-| **16:9** (Panoramico) | Modulo de auditoria de Benford (`BenfordScreen`) | Proporcion apaisada en tarjetas metricas que permite desplegar los 9 digitos observados vs. la curva teorica sin congestion visual horizontal. |
-| **1:1** (Cuadrangular) | Avatares de creadores y velocimetro de Brand Fit Score | Componentes con geometria simetrica (`Avatar.tsx`). El velocimetro radial en `ScoreScreen.tsx` utiliza vectores SVG escalables (`react-native-svg`, `viewBox="0 0 200 200"`), garantizando nitidez independiente de la densidad de pantalla. |
+En este prototipo, los datos son provistos por repositorios en memoria (`src/infrastructure/repositories/creatorRepository.ts`) que replican el contrato del scraper definitivo.
 
 ---
 
 ## 2. Equipo y Asignacion de Tareas
 
-El desarrollo se organizo en tres fases funcionales continuas, respaldadas por una etapa transversal de integracion y arquitectura:
+El desarrollo se ejecuto en un pipeline colaborativo y secuencial de cuatro etapas:
 
 ```mermaid
 flowchart LR
-    A["Alejandro Chiliquinga\nFase 1: Entrada y Benford"] --> B["Lizbeth Pillajo\nFase 2: Psicometria y Fit"]
-    B --> C["Alex Tituaña\nFase 3: Formatos y UI"]
-    D["Jessiel Chasiguano\nIntegracion, PM y Documentacion"] -.-> A
-    D -.-> B
-    D -.-> C
+    A["1. Entrada y Benford\nAlejandro Chiliquinga"] --> B["2. Psicometria y Fit\nLizbeth Pillajo"]
+    B --> C["3. Formatos y UI\nAlex Tituaña"]
+    C --> D["4. Integracion y Gestion\nJessiel Chasiguano"]
 ```
 
-| Integrante | Rol y Rama | Fase | Aportes Clave y Responsabilidad |
+| Integrante | Rol y Rama | Fase | Responsabilidad y Aportes Clave |
 |---|---|---|---|
-| **Alejandro Chiliquinga** | UX & Deteccion de Fraude<br>`feat/alejo-ux-screens` | Fase 1 | Entrada de usuario, envio por teclado en `HomeScreen`, scraping conceptual de seguidores/likes, verificacion mediante Ley de Benford, alertas rojas de fraude y ampliacion de `SUSPICIOUS_HINTS`. |
-| **Lizbeth Pillajo** | Arquitectura & Dominio<br>`feat/prototipo-liz` | Fase 2 | Evaluacion de engagement de los 10 videos, modelado psicometrico Big Five (OCEAN), cruce con arquetipos de marca, calculo de Brand Fit Score, estructuracion de capas DDD y reglas puras RN-01 a RN-06. |
-| **Alex Tituaña** | Diseno UI & Recomendaciones<br>`feat/alex-ui-components` | Fase 3 | Aislamiento de videos con mayor acogida real, recomendacion de formatos estrategicos en `RecsScreen`, construccion de componentes nativos reutilizables (Atomic Design) y estandarizacion de accesibilidad (`hitSlop`, sombras). |
-| **Jessiel Chasiguano** | Project Manager & Integrador<br>`main` | Transversal | Coordinacion del equipo, resolucion de conflictos de fusion, revision y merge de todos los Pull Requests (#1 al #8), estabilizacion tecnica de dependencias/rutas y elaboracion de la documentacion tecnica. |
+| **Alejandro Chiliquinga** | UX & Deteccion de Fraude<br>`feat/alejo-ux-screens` | Fase 1 | Entrada de usuario y soporte de teclado en `HomeScreen`, paso de metricas por la Ley de Benford, generacion de alertas rojas de fraude en `BenfordScreen` y palabras clave `SUSPICIOUS_HINTS`. |
+| **Lizbeth Pillajo** | Arquitectura & Dominio<br>`feat/prototipo-liz` | Fase 2 | Evaluacion de engagement en 10 videos, modelado psicometrico Big Five (OCEAN), cruce con arquetipos de marca, calculo del Brand Fit Score, estructuracion de capas y reglas puras RN-01 a RN-06. |
+| **Alex Tituaña** | Diseno UI & Recomendaciones<br>`feat/alex-ui-components` | Fase 3 | Aislamiento de videos de mayor acogida organica, recomendacion de formatos estrategicos en `RecsScreen`, creacion de la libreria de componentes nativos (Atomic Design) y accesibilidad tactil. |
+| **Jessiel Chasiguano** | Project Manager & Integrador<br>`main` | Fase 4 | Coordinacion general, revision y fusion de Pull Requests (#1 al #8), resolucion de conflictos, integracion de modulos, estabilizacion tecnica de dependencias/rutas y documentacion. |
 
 ---
 
-## 3. Arquitectura de Software y Metodologia
+## 3. Arquitectura y Metodologia
 
-Se establece una estricta distincion entre el patron arquitectonico y el metodo de modelado:
+La aplicacion implementa un patron de **Arquitectura en Capas (Layered / Clean Architecture)** con inversion de dependencias, desacoplando el Dominio puro (0% dependencias de UI) de la Infraestructura, Aplicacion y Presentacion. El modelado conceptual del negocio se rige bajo la metodologia **Domain-Driven Design (DDD)** a traves de Bounded Contexts y Reglas de Negocio formales (**RN-01 a RN-06**).
 
-```mermaid
-graph TD
-    P["Presentacion (src/screens, src/components)\nInterfaces organizadas por Bounded Contexts"]
-    A["Aplicacion (src/context/AppContext.tsx)\nCasos de uso y orquestacion de estado global"]
-    I["Infraestructura (src/infrastructure)\nRepositorio en memoria (creatorRepository.ts)"]
-    D["Dominio (src/domain - TypeScript Puro)\nAggregate Root, Invariantes y Reglas RN-01..06"]
-
-    P --> A
-    A --> I
-    A --> D
-    I --> D
-```
-
-* **Patron Arquitectonico — Arquitectura en Capas (Layered / Clean Architecture):** Separacion estricta de responsabilidades con inversion de dependencias. El dominio (`src/domain/`) es 100% TypeScript puro y desconoce React Native o APIs externas. La infraestructura implementa adaptadores de persistencia sin acoplar la logica de negocio.
-* **Metodologia de Modelado — Domain-Driven Design (DDD):** Enfoque guiado por el negocio para delimitar subdominios mediante Bounded Contexts y formalizar el Lenguaje Ubicuo.
-
-### Bounded Contexts y Reglas de Negocio
-
-| Bounded Context | Pantallas | Reglas de Negocio Implementadas (`src/domain/services/rules.ts`) |
-|---|---|---|
-| **BC1: Auditoria y Fraude** | `HomeScreen`<br>`ProgressScreen`<br>`BenfordScreen` | **RN-01:** Validacion y sanitizacion de handle (`/^[a-zA-Z0-9._]{2,24}$/`).<br>**RN-02:** Deteccion de patrones anómalos o bots (`SUSPICIOUS_HINTS`). |
-| **BC2: Afinidad y Psicometria** | `ScoreScreen`<br>`BigFiveScreen` | **RN-03a/b:** Semaforo y etiqueta de afinidad del Brand Fit Score.<br>**RN-04:** Bono de traccion segun engagement rate (+1 a +5 pts).<br>**RN-05:** Evaluacion de brecha psicometrica Big Five vs. ideal del arquetipo (tolerancia $\le 15$). |
-| **BC3: Recomendaciones** | `RecsScreen` | **RN-06:** Guardian de recomendaciones; bloquea sugerencias si la cuenta es fraudulenta (`authentic === false`). |
-
-> Para consultar la definicion completa del Lenguaje Ubicuo, Aggregate Roots y contratos de dominio, ver [ARCHITECTURE.md](ARCHITECTURE.md).
+> Para consultar el diagrama de capas, la especificacion del Lenguaje Ubicuo, Aggregate Roots y las Reglas de Negocio en detalle, consulta [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ---
 
-## 4. Demostracion Visual y Flujo
+## 4. Demostracion Visual
 
-El flujo interactivo se compone de 6 pantallas principales ejecutadas en **Expo Go**:
+Flujo de pantallas interactivas ejecutadas en **Expo Go**:
 
 | 1. Inicio y Busqueda | 2. Progreso de Analisis | 3. Autenticidad (Benford) | 4. Alerta de Anomalias |
 | :---: | :---: | :---: | :---: |
@@ -123,25 +91,25 @@ BrandFit/
 ├── assets/                              Recursos graficos e iconos
 ├── docs/                                Capturas y documentacion visual
 ├── src/
-│   ├── components/                      Libreria de componentes nativos (Atomic Design)
+│   ├── components/                      Componentes nativos reutilizables (Atomic Design)
 │   ├── context/                         Capa de Aplicacion: orquestador de estado (AppContext.tsx)
 │   ├── data/                            Re-exports para retrocompatibilidad
-│   ├── domain/                          Capa de Dominio (TypeScript puro, modelos y reglas RN-01..06)
-│   ├── infrastructure/                  Capa de Infraestructura (repositorios en memoria)
+│   ├── domain/                          Capa de Dominio: tipos, constantes y reglas puras RN-01..06
+│   ├── infrastructure/                  Capa de Infraestructura: repositorios en memoria
 │   ├── navigation/                      Enrutador y proteccion de notch (AppNavigator.tsx)
-│   ├── screens/                         Capa de Presentacion (vistas por Bounded Context)
+│   ├── screens/                         Capa de Presentacion: pantallas por Bounded Context
 │   └── theme/                           Tokens de diseno: colores, espaciados y tipografia
-├── ARCHITECTURE.md                      Especificacion tecnica de la arquitectura en capas y DDD
+├── ARCHITECTURE.md                      Especificacion tecnica de arquitectura y DDD
 ├── app.json                             Configuracion de Expo SDK 58
-├── package.json                         Dependencias y scripts
-└── README.md                            Documentacion general del proyecto
+├── package.json                         Dependencias y scripts del proyecto
+└── README.md                            Documentacion general
 ```
 
 ---
 
 ## 6. Instrucciones de Ejecucion
 
-**Requisitos:** Node.js 18+ y la app **Expo Go** instalada en tu dispositivo movil ([Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent) o [App Store](https://apps.apple.com/app/expo-go/id982107779)).
+**Requisitos:** Node.js 18+ y la aplicacion **Expo Go** en tu dispositivo movil ([Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent) o [App Store](https://apps.apple.com/app/expo-go/id982107779)).
 
 ```bash
 # 1. Clonar el repositorio

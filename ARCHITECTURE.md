@@ -6,11 +6,9 @@
 
 ## 1. Patron Arquitectonico vs. Metodologia de Diseno
 
-Antes de describir la estructura tecnica, se establece la distincion conceptual fundamental:
-
 | Concepto | Tipo | Descripcion |
 |---|---|---|
-| **Arquitectura en Capas (Layered / Clean Architecture)** | Patron de Arquitectura de Software | Define como se organizan y comunican los modulos del sistema. Establece fronteras, flujo de dependencias e independencia del dominio. |
+| **Arquitectura en Capas (Layered / Clean Architecture)** | Patron de Arquitectura de Software | Define la organizacion y comunicacion de los modulos del sistema. Establece fronteras, flujo de dependencias e independencia del dominio. |
 | **Domain-Driven Design (DDD)** | Metodologia de Diseno | Enfoque centrado en el negocio para comprender el problema, delimitar subdominios (Bounded Contexts), unificar el vocabulario (Lenguaje Ubicuo) e implementar modelos tacticos. |
 
 ---
@@ -18,15 +16,14 @@ Antes de describir la estructura tecnica, se establece la distincion conceptual 
 ## 2. Arquitectura en Capas
 
 ```mermaid
-graph TD
-    P["Capa de Presentacion\nsrc/screens · src/components · src/navigation\nInterfaces nativas por Bounded Context"]
-    A["Capa de Aplicacion\nsrc/context · AppContext.tsx\nCasos de uso · Orquestacion · Estado global"]
-    I["Capa de Infraestructura\nsrc/infrastructure\nRepositorios en memoria · Adaptadores de datos"]
-    D["Capa de Dominio\nsrc/domain\nTypeScript puro · 0% dependencias de UI\nAggregate Root · Value Objects · Reglas RN-01 a RN-06"]
+flowchart TD
+    P["Capa de Presentacion\nsrc/screens · src/components · src/navigation"]
+    A["Capa de Aplicacion\nsrc/context · AppContext.tsx"]
+    I["Capa de Infraestructura\nsrc/infrastructure · creatorRepository.ts"]
+    D["Capa de Dominio (Nucleo Puro)\nsrc/domain · Modelos e Invariantes · Reglas RN-01 a RN-06"]
 
     P --> A
     A --> I
-    A --> D
     I --> D
 ```
 
@@ -53,14 +50,15 @@ graph TD
 ## 3. Metodologia DDD: Bounded Contexts
 
 ```mermaid
-flowchart LR
-    BC1["BC1 — Auditoria de Autenticidad\nHome · Progress · Benford\n---\nValidar username RN-01\nDetectar anomalia RN-02\nPipeline de auditoria\nVeredicto autenticidad"]
-    BC2["BC2 — Afinidad y Psicometria\nScore · BigFive\n---\nBrand Fit Score 0-100\nBono de engagement RN-04\nBrecha Big Five RN-05\nArquetipos corporativos"]
-    BC3["BC3 — Recomendaciones\nRecs\n---\nTop 3 videos por engagement\nTono editorial\nFormato sugerido\nGuardian RN-06"]
+flowchart TD
+    BC1["BC1: Auditoria de Autenticidad\nHome · Progress · Benford\nValidar username RN-01 · Detectar anomalias RN-02"]
+    BC2["BC2: Afinidad y Psicometria\nScore · BigFive\nBrand Fit Score 0-100 · Bono RN-04 · Brecha Big Five RN-05"]
+    BC3["BC3: Recomendaciones\nRecs\nTop 3 videos por engagement · Formato sugerido"]
+    BLQ["Bloqueo de Recomendaciones\nAlerta de Fraude · Guardian RN-06"]
 
     BC1 -->|"authentic = true"| BC2
     BC2 --> BC3
-    BC1 -->|"authentic = false"| X["RN-06 bloquea BC3"]
+    BC1 -->|"authentic = false"| BLQ
 ```
 
 | Bounded Context | Responsabilidad del Negocio | Pantallas |
