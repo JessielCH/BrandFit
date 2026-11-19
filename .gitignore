@@ -1,26 +1,41 @@
-# Dependencias
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
 node_modules/
 
-# Expo y compilación
+# Expo
 .expo/
 dist/
 web-build/
+expo-env.d.ts
 
-# Archivos de entorno y logs
-.env*.local
-*.log
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
 npm-debug.*
 yarn-debug.*
 yarn-error.*
 
-# Sistema operativo
+# macOS
 .DS_Store
-Thumbs.db
+*.pem
 
-# Configuración local de agentes y prototipos de diseño
-.agents/
-.agent/
-AGENTS.md
-*.agent.md
-*Prototipo*
-images/
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+# generated native folders
+/ios
+/android

@@ -1,5 +1,6 @@
 /**
  * AppText – componente de texto que aplica automáticamente la tipografía Inter.
+ * Mapea fontWeight a las variantes de fuente Inter cargadas en Expo.
  */
 import React from 'react'
 import { Text, type TextProps, StyleSheet } from 'react-native'
