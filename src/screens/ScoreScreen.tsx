@@ -21,6 +21,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { useApp } from '../context'
 import { ARCHETYPES } from '../data/constants'
 import { archetypeLabel, engagementBonus } from '../data/helpers'
+import { affinityVerdictLabel } from '../domain'
 import { Avatar, Button, Card, Chip, ScreenHeader, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 import NoAnalysis from './NoAnalysis'
@@ -144,9 +145,9 @@ export default function ScoreScreen() {
           </View>
         </View>
 
-        {/* Insignia cualitativa de compatibilidad */}
+        {/* Insignia cualitativa de compatibilidad – RN-03b */}
         <Chip tone="success" style={styles.fitChip}>
-          {score >= 70 ? 'Excelente afinidad' : 'Buena afinidad'}
+          {affinityVerdictLabel(score)}
         </Chip>
 
         {/* 4. Resumen de Métricas Clave */}
