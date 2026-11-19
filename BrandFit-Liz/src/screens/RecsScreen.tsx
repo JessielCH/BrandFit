@@ -7,6 +7,7 @@ import { View, ScrollView, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useApp } from '../context'
+import { canShowRecommendations } from '../domain'
 import { avatarColors } from '../data/helpers'
 import { Card, ScreenHeader, ToneChip, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
@@ -17,8 +18,8 @@ export default function RecsScreen() {
 
   if (!creator) return <NoAnalysis kind="recs" />
 
-  // Cuenta con patrón sospechoso: sin recomendaciones
-  if (!creator.authentic) {
+  // RN-06: Bloqueo de recomendaciones si la cuenta no es auténtica
+  if (!canShowRecommendations(creator.authentic)) {
     return (
       <View style={styles.flex}>
         <ScreenHeader title="Qué contenido funciona mejor" subtitle={`@${creator.username}`} />
