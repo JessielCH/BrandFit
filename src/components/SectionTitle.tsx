@@ -1,6 +1,5 @@
 /**
  * SectionTitle – encabezado de sección en mayúsculas pequeñas.
- * Equivalente a <SectionTitle> del prototipo web.
  */
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
@@ -22,16 +21,6 @@ export function SectionTitle({ children, action }: Props) {
 }
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 12,
-  },
-  label: {
-    fontSize: FontSize.sm,
-    fontWeight: '600',
-    color: Colors.muted,
-    letterSpacing: 0.6,
-  },
+  row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
+  label: { fontSize: FontSize.sm, fontWeight: '600', color: Colors.muted, letterSpacing: 0.6 },
 })

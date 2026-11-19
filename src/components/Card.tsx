@@ -1,6 +1,5 @@
 /**
  * Card – contenedor con borde, esquinas redondeadas y sombra sutil.
- * Equivalente al <Card> del prototipo web.
  */
 import React from 'react'
 import { View, StyleSheet, type StyleProp, type ViewStyle } from 'react-native'

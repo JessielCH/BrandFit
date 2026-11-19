@@ -1,6 +1,5 @@
 /**
  * @deprecated Re-exporta desde la capa de Dominio para compatibilidad.
- * Los imports existentes (src/data/helpers) siguen funcionando.
  */
 export {
   scoreTone,

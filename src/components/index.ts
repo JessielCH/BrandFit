@@ -12,4 +12,3 @@ export { SectionTitle } from './SectionTitle'
 export { EmptyState } from './EmptyState'
 export { TabBar } from './TabBar'
 export { AppText } from './AppText'
-
