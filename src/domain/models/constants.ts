@@ -66,7 +66,15 @@ export const ANALYSIS_STEPS = [
 ] as const
 
 /** Palabras clave que activan la detección de fraude — RN-02 */
-export const SUSPICIOUS_HINTS = ['viralboost', 'bot', 'fake', 'compra'] as const
+export const SUSPICIOUS_HINTS = [
+  'viralboost',
+  'bot',
+  'bots',
+  'fake',
+  'compra',
+  'spam',
+  'scam',
+] as const
 
 // ─── Seed Data ────────────────────────────────────────────────────────────────
 
