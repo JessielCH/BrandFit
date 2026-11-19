@@ -19,8 +19,8 @@ import {
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useApp } from '../context'
-import { CREATORS } from '../data/constants'
-import { archetypeLabel } from '../data/helpers'
+import { CREATORS } from '../domain'
+import { archetypeLabel, validateCreatorUsername } from '../domain'
 import { Avatar, Button, Card, Logo, ScoreChip, SectionTitle, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 
@@ -40,10 +40,9 @@ export default function HomeScreen() {
    * Remueve '@' iniciales y comprueba longitud (2 a 24) y caracteres válidos.
    */
   function submit() {
-    const clean = value.trim().replace(/^@/, '')
-    if (!clean) return setError('Escribe un @username.')
-    if (!/^[a-zA-Z0-9._]{2,24}$/.test(clean))
-      return setError('Usa solo letras, números, puntos o guiones bajos.')
+    // RN-01: validación y sanitización del @username via Domain Service
+    const { valid, clean, error: ruleError } = validateCreatorUsername(value)
+    if (!valid) return setError(ruleError ?? 'Username inválido.')
     setError('')
     startAnalysis(clean)
   }

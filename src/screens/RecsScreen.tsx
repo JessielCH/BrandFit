@@ -12,6 +12,7 @@ import { View, ScrollView, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useApp } from '../context'
+import { canShowRecommendations } from '../domain'
 import { avatarColors } from '../data/helpers'
 import { Card, ScreenHeader, ToneChip, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
@@ -27,8 +28,8 @@ export default function RecsScreen() {
   // docs: Si no hay análisis activo en memoria, muestra el estado vacío informativo
   if (!creator) return <NoAnalysis kind="recs" />
 
-  // docs: Si la cuenta fue clasificada como fraudulenta / anómala, se omite la recomendación de contenido
-  if (!creator.authentic) {
+  // RN-06: Bloqueo de recomendaciones si la cuenta no es auténtica
+  if (!canShowRecommendations(creator.authentic)) {
     return (
       <View style={styles.flex}>
         <ScreenHeader title="Qué contenido funciona mejor" subtitle={`@${creator.username}`} />
