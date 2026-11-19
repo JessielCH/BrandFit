@@ -66,7 +66,13 @@ export default function RecsScreen() {
 
               {/* Info del video */}
               <View style={styles.videoInfo}>
-                <Text style={styles.videoTitle} numberOfLines={2}>{v.title}</Text>
+                <Text
+                  style={styles.videoTitle}
+                  numberOfLines={2}
+                  ellipsizeMode="tail"
+                >
+                  {v.title}
+                </Text>
                 <View style={styles.videoMeta}>
                   <Text style={styles.videoEngagement}>{v.engagement.toFixed(2)}%</Text>
                   <ToneChip tone={v.tone} />
@@ -97,7 +103,7 @@ const styles = StyleSheet.create({
   scroll: { flex: 1, backgroundColor: Colors.bg },
   content: {
     paddingHorizontal: Spacing['2xl'],
-    paddingBottom: Spacing['3xl'],
+    paddingBottom: Spacing['4xl'] + Spacing.xl,
     gap: 16,
   },
 
