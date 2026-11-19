@@ -10,10 +10,10 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
-import { useApp } from '../context'
+import { useApp } from '../application'
 import { TabBar } from '../components'
 import { Colors } from '../theme'
-import type { ScreenId } from '../data/types'
+import type { ScreenId } from '../domain'
 
 // Pantallas modulares
 import HomeScreen from '../screens/HomeScreen'
@@ -48,7 +48,10 @@ export default function AppNavigator() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.root} edges={['top']}>
+      <SafeAreaView
+        style={styles.root}
+        edges={showTabs ? ['top'] : ['top', 'bottom']}
+      >
         {/* Contenedor dinámico de la pantalla activa */}
         <View style={styles.content}>
           <Screen />

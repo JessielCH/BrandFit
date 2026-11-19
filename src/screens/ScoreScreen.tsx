@@ -18,9 +18,8 @@ import {
 } from 'react-native'
 import Svg, { Circle } from 'react-native-svg'
 import { Ionicons } from '@expo/vector-icons'
-import { useApp } from '../context'
-import { ARCHETYPES } from '../data/constants'
-import { archetypeLabel, engagementBonus } from '../data/helpers'
+import { useApp } from '../application'
+import { ARCHETYPES, archetypeLabel, engagementBonus, affinityVerdictLabel } from '../domain'
 import { Avatar, Button, Card, Chip, ScreenHeader, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 import NoAnalysis from './NoAnalysis'
@@ -65,7 +64,9 @@ export default function ScoreScreen() {
         onPress={() => setDropdownOpen(true)}
         activeOpacity={0.75}
       >
-        <Text style={styles.selectorText}>{label}</Text>
+        <Text style={styles.selectorText} numberOfLines={1}>
+          {label}
+        </Text>
         <Ionicons name="chevron-down" size={20} color={Colors.muted} />
       </TouchableOpacity>
 
@@ -144,9 +145,9 @@ export default function ScoreScreen() {
           </View>
         </View>
 
-        {/* Insignia cualitativa de compatibilidad */}
+        {/* Insignia cualitativa de compatibilidad (Regla de Dominio RN-03b) */}
         <Chip tone="success" style={styles.fitChip}>
-          {score >= 70 ? 'Excelente afinidad' : 'Buena afinidad'}
+          {affinityVerdictLabel(score)}
         </Chip>
 
         {/* 4. Resumen de Métricas Clave */}
@@ -200,9 +201,11 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.xl,
   },
   selectorText: {
+    flex: 1,
     fontSize: FontSize.md,
     fontWeight: '500',
     color: Colors.ink,
+    marginRight: Spacing.sm,
   },
   modalOverlay: {
     flex: 1,

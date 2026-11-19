@@ -11,8 +11,8 @@ import React from 'react'
 import { View, ScrollView, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
-import { useApp } from '../context'
-import { avatarColors } from '../data/helpers'
+import { useApp } from '../application'
+import { avatarColors } from '../domain'
 import { Card, ScreenHeader, ToneChip, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 import NoAnalysis from './NoAnalysis'
@@ -147,6 +147,7 @@ const styles = StyleSheet.create({
   videoMeta: {
     flexDirection: 'row',
     alignItems: 'center',
+    flexWrap: 'wrap',
     gap: 6,
   },
   videoEngagement: {

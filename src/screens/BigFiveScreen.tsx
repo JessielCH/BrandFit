@@ -10,9 +10,8 @@
 import React from 'react'
 import { View, ScrollView, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import { useApp } from '../context'
-import { IDEALS, TRAITS } from '../data/constants'
-import { archetypeLabel } from '../data/helpers'
+import { useApp } from '../application'
+import { IDEALS, TRAITS, archetypeLabel, evaluateTraitAlignment } from '../domain'
 import { Button, Card, ScreenHeader, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 import NoAnalysis from './NoAnalysis'
@@ -55,11 +54,11 @@ export default function BigFiveScreen() {
           </View>
         </View>
 
-        {/* 3. Desglose de cada dimensión Big Five */}
+        {/* 3. Desglose de cada dimensión Big Five usando la Regla de Dominio RN-05 */}
         {TRAITS.map((trait, i) => {
           const value = creator.bigFive[i]
           const target = ideal[i]
-          const diff = Math.abs(target - value)
+          const { isAligned, label } = evaluateTraitAlignment(value, target)
           return (
             <View
               key={trait}
@@ -70,8 +69,8 @@ export default function BigFiveScreen() {
                 <Text style={styles.traitName}>{trait}</Text>
                 <Text style={styles.traitValues}>
                   {value} / {target} ·{' '}
-                  <Text style={diff <= 15 ? styles.diffGood : styles.diffFair}>
-                    {diff === 0 ? 'Exacto' : `dif. ${diff}`}
+                  <Text style={isAligned ? styles.diffGood : styles.diffFair}>
+                    {label}
                   </Text>
                 </Text>
               </View>
@@ -84,7 +83,7 @@ export default function BigFiveScreen() {
                     styles.barFill,
                     {
                       width: `${value}%`,
-                      backgroundColor: diff <= 15 ? Colors.successBar : Colors.warningBg,
+                      backgroundColor: isAligned ? Colors.successBar : Colors.warningBg,
                     },
                   ]}
                 />
@@ -97,9 +96,11 @@ export default function BigFiveScreen() {
       </Card>
 
       {/* 4. Botón de navegación hacia la pantalla final de Recomendaciones */}
-      <Button onPress={() => go('recs')} style={styles.nextBtn}>
-        Ver recomendaciones de contenido
-      </Button>
+      <View style={styles.nextBtnWrap}>
+        <Button onPress={() => go('recs')}>
+          Ver recomendaciones de contenido
+        </Button>
+      </View>
     </ScrollView>
   )
 }
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
     marginLeft: -1.5,
     borderRadius: 1,
   },
-  nextBtn: {
-    marginHorizontal: Spacing['2xl'],
+  nextBtnWrap: {
+    paddingHorizontal: Spacing['2xl'],
   },
 })

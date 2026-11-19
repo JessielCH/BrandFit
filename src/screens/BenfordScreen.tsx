@@ -11,8 +11,8 @@
 import React from 'react'
 import { View, ScrollView, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import { useApp } from '../context'
-import { BENFORD_EXPECTED } from '../data/constants'
+import { useApp } from '../application'
+import { BENFORD_EXPECTED } from '../domain'
 import { Button, Card, ScreenHeader, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 import NoAnalysis from './NoAnalysis'
@@ -123,9 +123,11 @@ export default function BenfordScreen() {
       </Card>
 
       {/* 4. Botón de acción para avanzar hacia el Brand Fit Score */}
-      <Button onPress={() => go('score')} style={styles.nextBtn}>
-        {ok ? 'Continuar a Brand Fit Score' : 'Ver análisis de todos modos'}
-      </Button>
+      <View style={styles.nextBtnWrap}>
+        <Button onPress={() => go('score')}>
+          {ok ? 'Continuar a Brand Fit Score' : 'Ver análisis de todos modos'}
+        </Button>
+      </View>
     </ScrollView>
   )
 }
@@ -250,8 +252,8 @@ const styles = StyleSheet.create({
     fontSize: FontSize.xs,
     color: Colors.muted,
   },
-  nextBtn: {
-    marginHorizontal: Spacing['2xl'],
+  nextBtnWrap: {
+    paddingHorizontal: Spacing['2xl'],
     marginTop: Spacing.sm,
   },
 })

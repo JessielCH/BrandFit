@@ -8,10 +8,10 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { View, StyleSheet, ActivityIndicator } from 'react-native'
+import { View, ScrollView, StyleSheet, ActivityIndicator } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import { useApp } from '../context'
-import { ANALYSIS_STEPS } from '../data/constants'
+import { useApp } from '../application'
+import { ANALYSIS_STEPS } from '../domain'
 import { Button, Card, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 
@@ -42,9 +42,13 @@ export default function ProgressScreen() {
   const pct = Math.round((Math.min(current, total) / total) * 100)
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.scroll}
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}
+    >
       {/* 1. Título principal */}
-      <Text style={styles.title}>
+      <Text style={styles.title} numberOfLines={2}>
         Analizando a @{pendingUsername || 'creador'}
       </Text>
 
@@ -116,24 +120,27 @@ export default function ProgressScreen() {
       <Button variant="ghost" onPress={() => go('home')} style={styles.cancelBtn}>
         Cancelar
       </Button>
-    </View>
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scroll: {
     flex: 1,
     backgroundColor: Colors.bg,
+  },
+  container: {
+    flexGrow: 1,
     paddingHorizontal: Spacing['2xl'],
-    paddingTop: Spacing['4xl'],
+    paddingTop: Spacing['2xl'],
     paddingBottom: Spacing['3xl'],
   },
   title: {
-    fontSize: FontSize['4xl'],
+    fontSize: FontSize['3xl'],
     fontWeight: '600',
     color: Colors.ink,
     letterSpacing: -0.4,
-    marginBottom: Spacing['2xl'],
+    marginBottom: Spacing.xl,
   },
   progressSection: {
     gap: 8,

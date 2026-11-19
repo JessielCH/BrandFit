@@ -91,14 +91,15 @@ export function Button({
 
 const styles = StyleSheet.create({
   base: {
-    height: 48,
+    minHeight: 48,
     borderRadius: Radius.md,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
     gap: 8,
     paddingHorizontal: 16,
-    width: '100%',
+    paddingVertical: 10,
+    alignSelf: 'stretch',
   },
   primary: {
     backgroundColor: Colors.primary,
