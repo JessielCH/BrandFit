@@ -32,7 +32,11 @@ const chipColors: Record<ChipTone, { bg: string; text: string }> = {
 export function Chip({ children, tone = 'neutral', style }: ChipProps) {
   const { bg, text } = chipColors[tone]
   return (
-    <View style={[styles.base, { backgroundColor: bg }, style]}>
+    <View
+      accessibilityRole="button"
+      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+      style={[styles.base, { backgroundColor: bg }, style]}
+    >
       <Text style={[styles.label, { color: text }]}>{children}</Text>
     </View>
   )
