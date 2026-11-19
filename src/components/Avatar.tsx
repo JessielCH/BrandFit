@@ -9,7 +9,7 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
-import { avatarColors } from '../data/helpers'
+import { avatarColors } from '../domain'
 import { AppText as Text } from './AppText'
 
 /**

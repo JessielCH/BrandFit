@@ -8,7 +8,7 @@
 
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons'
-import { useApp } from '../context'
+import { useApp } from '../application'
 import { Button, EmptyState } from '../components'
 import { Colors } from '../theme'
 

@@ -18,9 +18,9 @@ import {
   StyleSheet,
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import { useApp } from '../context'
-import { CREATORS } from '../data/constants'
-import { archetypeLabel } from '../data/helpers'
+import { useApp } from '../application'
+import { CREATORS } from '../infrastructure'
+import { archetypeLabel, validateCreatorUsername } from '../domain'
 import { Avatar, Button, Card, Logo, ScoreChip, SectionTitle, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 
@@ -36,14 +36,12 @@ export default function HomeScreen() {
   const [error, setError] = useState('')
 
   /**
-   * Sanitiza y valida el nombre de usuario antes de disparar el flujo de análisis.
-   * Remueve '@' iniciales y comprueba longitud (2 a 24) y caracteres válidos.
+   * Invoca la regla de negocio RN-01 (`validateCreatorUsername`) de la Capa de Dominio
+   * antes de disparar el Caso de Uso de análisis (`startAnalysis`).
    */
   function submit() {
-    const clean = value.trim().replace(/^@/, '')
-    if (!clean) return setError('Escribe un @username.')
-    if (!/^[a-zA-Z0-9._]{2,24}$/.test(clean))
-      return setError('Usa solo letras, números, puntos o guiones bajos.')
+    const { clean, error: validationError } = validateCreatorUsername(value)
+    if (validationError) return setError(validationError)
     setError('')
     startAnalysis(clean)
   }

@@ -11,9 +11,9 @@ import React from 'react'
 import { View, TouchableOpacity, StyleSheet, Platform } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useApp } from '../context'
+import { useApp } from '../application'
 import { Colors, FontSize } from '../theme'
-import type { ScreenId } from '../data/types'
+import type { ScreenId } from '../domain'
 import { AppText as Text } from './AppText'
 
 // ─── Definición de pestañas ───────────────────────────────────────────────────

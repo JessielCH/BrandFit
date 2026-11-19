@@ -18,7 +18,7 @@ import {
   Inter_600SemiBold,
   Inter_700Bold,
 } from '@expo-google-fonts/inter'
-import { AppProvider } from './src/context'
+import { AppProvider } from './src/application'
 import AppNavigator from './src/navigation/AppNavigator'
 import { Colors } from './src/theme'
 

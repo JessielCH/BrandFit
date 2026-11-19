@@ -9,8 +9,8 @@
 import React from 'react'
 import { View, StyleSheet, type StyleProp, type ViewStyle } from 'react-native'
 import { Colors, FontSize, Radius } from '../theme'
-import { scoreTone } from '../data/helpers'
-import type { Tone } from '../data/types'
+import { scoreTone } from '../domain'
+import type { Tone } from '../domain'
 import { AppText as Text } from './AppText'
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
