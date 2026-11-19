@@ -15,7 +15,7 @@ import React, {
   type ReactNode,
 } from 'react'
 import type { ArchetypeId, Creator, ScreenId } from '../data/types'
-import { CREATORS, FRAUD_CREATOR, SUSPICIOUS_HINTS } from '../data/constants'
+import { resolveAuditedCreator } from '../infrastructure/repositories/creatorRepository'
 
 // ─── Definición de Tipos del Contexto ─────────────────────────────────────────
 
@@ -78,31 +78,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [])
 
   /**
-   * Finaliza la simulación de análisis:
-   * Determina si el nombre de usuario contiene palabras clave sospechosas (e.g. 'bot', 'fake')
-   * para cargar el caso de fraude de Benford, o carga el perfil correspondiente.
+   * Finaliza la simulación de análisis delegando al repositorio de infrastructure (BC1).
+   * resolveAuditedCreator aplica RN-02 (detección de fraude) y resuelve el Creator auditado.
    */
   const finishAnalysis = useCallback(() => {
-    const u = pendingUsername || 'alexmando15'
-    const lower = u.toLowerCase()
-    let result: Creator
-
-    // docs: Si el username incluye indicios sospechosos, se carga el perfil de prueba con anomalía de Benford
-    if (SUSPICIOUS_HINTS.some((h) => lower.includes(h))) {
-      result = { ...FRAUD_CREATOR, username: u }
-    } else {
-      const known = CREATORS.find((c) => c.username.toLowerCase() === lower)
-      result =
-        known ??
-        ({
-          ...CREATORS[0],
-          username: u,
-          name: u,
-          analyzedAt: 'Ahora',
-          hue: 140 + ((u.length * 7) % 40),
-        } as Creator)
-    }
-
+    const username = pendingUsername || 'alexmando15'
+    const result = resolveAuditedCreator(username)
     setCreator(result)
     setScreen('benford')
   }, [pendingUsername])
