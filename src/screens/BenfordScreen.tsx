@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
   scroll: { flex: 1, backgroundColor: Colors.bg },
   content: {
     paddingHorizontal: Spacing['2xl'],
-    paddingBottom: Spacing['3xl'],
+    paddingBottom: Spacing['4xl'] + Spacing.xl,
     gap: 16,
   },
   card: { padding: 20 },
