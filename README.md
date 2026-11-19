@@ -17,154 +17,66 @@
 ## Alcance del Repositorio
 
 > [!NOTE]
-> Este repositorio corresponde exclusivamente al **prototipo frontend de la aplicacion movil**.
->
-> La interfaz fue construida traduciendo el diseno de Figma a codigo ejecutable en React Native con Expo, apoyandose en herramientas de inteligencia artificial. El sistema esta estructurado con un **patron de Arquitectura en Capas (Layered / Clean Architecture)** y modelado bajo la **metodologia Domain-Driven Design (DDD)**. Los datos son simulados (mock data) tipados para representar el flujo completo sin scraper ni backend.
+> Este repositorio contiene exclusivamente el **prototipo frontend de la aplicacion movil**, desarrollado en **React Native con Expo SDK 58**. Implementa un patron de **Arquitectura en Capas (Layered / Clean Architecture)** y un modelado conceptual basado en la **metodologia Domain-Driven Design (DDD)**. Opera con datos simulados (mock data) tipados en memoria para validar la experiencia de usuario y las reglas de negocio antes de la integracion con servicios de backend y scraping.
 
 ---
 
-## 1. Presentacion y Planteamiento del Problema
+## 1. Planteamiento del Problema y Adaptabilidad Visual
 
-### El Problema
+### Problema y Origen de Datos
 
-El marketing de influencers mueve miles de millones de dolares anuales en el segmento B2B, pero sufre tres fallas criticas:
+En el marketing de influencers B2B, las decisiones de contratacion suelen basarse en metricas de vanidad facilmente manipulables (compra de seguidores o likes), generando inversiones fallidas y desalineacion de valores entre marca y creador. 
 
-| # | Problema | Consecuencia |
+**BrandFit** audita la autenticidad y compatibilidad mediante datos publicos extraidos de perfiles de TikTok:
+* Identificador `@username`, conteo de seguidores y metricas de interaccion.
+* Muestra de los ultimos 10 videos (vistas, likes, comentarios, engagement rate).
+* Distribucion de primeros digitos en interacciones para analisis forense mediante la **Ley de Benford**.
+* Analisis de tono de contenido y clasificacion de formatos de video.
+
+### Adaptacion a Relaciones de Aspecto (9:16, 16:9 y 1:1)
+
+La interfaz se diseno contemplando resolucion, densidad de pixeles (DPI/PPI) y relaciones de aspecto en dispositivos moviles:
+
+| Relacion | Contexto de Uso | Consideraciones Tecnicas y Adaptabilidad |
 |---|---|---|
-| 1 | **Metricas infladas artificialmente** — seguidores y likes comprados o generados por bots | Inversion en audiencias falsas que no convierten |
-| 2 | **Incompatibilidad de valores** — el arquetipo de la marca choca con la personalidad real del creador | Crisis reputacionales y ROI nulo en campanas |
-| 3 | **Desconocimiento del formato organico** — las marcas desconocen que tipo de contenido genera traccion real | Presupuesto creativo desperdiciado en formatos que no enganchan |
-
-**BrandFit** transforma la contratacion de influencers de una apuesta intuitiva a una **decision corporativa respaldada por datos y rigor matematico**.
-
----
-
-### Origen de la Informacion
-
-La informacion analizada proviene de la huella digital publica del creador en TikTok:
-
-| Fuente | Dato Extraido |
-|---|---|
-| Perfil publico | `@username`, nombre, avatar, total de seguidores |
-| Ultimas 10 publicaciones | Vistas, likes, comentarios, guardados |
-| Metricas de interaccion | Tasa de engagement organico calculada |
-| Primeros digitos de contadores | Distribucion para analisis forense (Ley de Benford) |
-| Contenido del video | Tonalidad editorial (positiva, neutra, negativa) y formato |
-
-En esta fase, los datos son provistos por repositorios en memoria (`src/infrastructure/repositories/creatorRepository.ts`) con el mismo contrato de interfaz que consumira el scraper definitivo.
-
----
-
-### Adaptacion de Interfaces a Relaciones de Aspecto
-
-La experiencia de usuario fue disenada considerando fragmentacion de dispositivos, tamano de pantalla, resolucion y densidad de pixeles (DPI/PPI):
-
-```mermaid
-graph LR
-    A["9:16 — Viewport Movil\n(TikTok / Reels)"] --> D[App Screens]
-    B["16:9 — Panoramico\n(Grafico Benford)"] --> D
-    C["1:1 — Cuadrangular\n(Avatar / Velocimetro SVG)"] --> D
-    D --> E[React Native dp/pt\nUnidades independientes de densidad]
-```
-
-| Aspecto | Uso en la App | Implementacion |
-|---|---|---|
-| **9:16** (vertical movil) | Todas las pantallas principales | `SafeAreaView` con `react-native-safe-area-context`; `ScrollView` + `KeyboardAvoidingView` para notch y teclado |
-| **16:9** (panoramico) | Grafico de Ley de Benford en `BenfordScreen` | 9 barras comparativas con amplitud horizontal para evitar saturacion visual |
-| **1:1** (cuadrangular) | Avatares de creadores y velocimetro de Brand Fit Score | `borderRadius: 9999` con gradientes; SVG `viewBox="0 0 200 200"` para perfecta nitidez en cualquier DPI |
+| **9:16** (Vertical Movil) | Vistas principales de navegacion y miniaturas estilo Reel/TikTok | Formato nativo de smartphones modernos. Se implementa con `SafeAreaView` (`react-native-safe-area-context`) para aislar notches y Dynamic Island, junto con `ScrollView` elásticos y `KeyboardAvoidingView` para evitar desbordes. |
+| **16:9** (Panoramico) | Modulo de auditoria de Benford (`BenfordScreen`) | Proporcion apaisada en tarjetas metricas que permite desplegar los 9 digitos observados vs. la curva teorica sin congestion visual horizontal. |
+| **1:1** (Cuadrangular) | Avatares de creadores y velocimetro de Brand Fit Score | Componentes con geometria simetrica (`Avatar.tsx`). El velocimetro radial en `ScoreScreen.tsx` utiliza vectores SVG escalables (`react-native-svg`, `viewBox="0 0 200 200"`), garantizando nitidez independiente de la densidad de pantalla. |
 
 ---
 
 ## 2. Equipo y Asignacion de Tareas
 
-### Flujo de Responsabilidades
+El desarrollo se organizo en tres fases funcionales continuas, respaldadas por una etapa transversal de integracion y arquitectura:
 
 ```mermaid
 flowchart LR
     A["Alejandro Chiliquinga\nFase 1: Entrada y Benford"] --> B["Lizbeth Pillajo\nFase 2: Psicometria y Fit"]
-    B --> C["Alex Tituaña\nFase 3: Diseno UI y Recs"]
-    D["Jessiel Chasiguano\nPM · Integracion · Documentacion"] -.-> A
+    B --> C["Alex Tituaña\nFase 3: Formatos y UI"]
+    D["Jessiel Chasiguano\nIntegracion, PM y Documentacion"] -.-> A
     D -.-> B
     D -.-> C
 ```
 
-### Contribuciones Detalladas
-
-#### Kleber Alejandro Chiliquinga — Auditoria de Autenticidad y Deteccion de Fraude
-**Rama:** `feat/alejo-ux-screens`
-
-> *"Se empezaria ingresando el usuario; el sistema scrapea y pasa las metricas de seguidores y likes por la Ley de Benford. Si la cuenta es sospechosa se lanza una alerta en rojo, y si es autentica, pasa a la siguiente fase."*
-
-| Area | Contribucion |
-|---|---|
-| `HomeScreen.tsx` | Envio por teclado (`onSubmitEditing`), desactivacion de autocorrecciones |
-| `src/domain/models/constants.ts` | Ampliacion de `SUSPICIOUS_HINTS` con palabras clave de bots |
-| `BenfordScreen.tsx` | Visualizacion comparativa matematica de primeros digitos y alertas de autenticidad |
-| Datos de prueba | Creacion y ampliacion del catalogo de creadores en la capa de infraestructura |
-
----
-
-#### Lizbeth Pillajo — Arquitectura en Capas, Modelado DDD y Brand Fit Score
-**Rama:** `feat/prototipo-liz`
-
-> *"Sobre los ultimos 10 videos se evalua el engagement real, calculamos la personalidad del creador mediante el modelo Big Five (OCEAN) y el arquetipo de la marca corporativa, y vemos como va el fit porcentual entre ambos."*
-
-| Area | Contribucion |
-|---|---|
-| Arquitectura | Estructuracion del patron en capas: `src/domain/`, `src/infrastructure/`, `src/context/` |
-| Reglas de negocio | Implementacion de `RN-01` a `RN-06` en `rules.ts` (TypeScript puro, 0% UI) |
-| `ScoreScreen.tsx` | Semaforo del Brand Fit Score, bono de traccion (`RN-04`) y veredicto textual (`RN-03b`) |
-| `BigFiveScreen.tsx` | Brecha psicometrica OCEAN frente al ideal del arquetipo con barras ambar (`RN-05`) |
-| `ARCHITECTURE.md` | Documento de arquitectura y metodologia |
-
----
-
-#### Alex Tiuaña — Sistema de Diseno UI y Recomendacion de Formatos
-**Rama:** `feat/alex-ui-components`
-
-> *"Se analizan los videos del creador, el sistema aisla los de mayor acogida y le indica a la marca que formato especifico de contenido genera mas consumo organico en su audiencia real."*
-
-| Area | Contribucion |
-|---|---|
-| Libreria de componentes | Creacion de `Card`, `Button`, `Avatar`, `Chip`, `TabBar`, `ScreenHeader`, `EmptyState` |
-| Accesibilidad | `hitSlop` ampliado, `accessibilityRole`, sombras multiplataforma (`elevation` / `shadowOffset`) |
-| `RecsScreen.tsx` | Ranking de top 3 videos por engagement y tarjeta de formato editorial sugerido |
-
----
-
-#### Jessiel Josue Chasiguano Santin — Project Manager, Integracion y Documentacion
-**Rol:** Coordinador General y Merge Manager
-
-| Area | Contribucion |
-|---|---|
-| Gestion del repositorio | Apertura y fusion exitosa de Pull Requests #1 al #8, resolucion de conflictos entre ramas |
-| Estabilizacion tecnica | Refactorizacion de dependencias, tipados y rutas tras la migracion a la estructura en capas |
-| Documentacion | Redaccion de `README.md`, `ARCHITECTURE.md` y guias del proyecto |
-| Validacion | Pruebas de integracion en dispositivos reales mediante Expo Go |
-
-### Resumen del Equipo
-
-| Integrante | Rol | Rama | Responsabilidad Principal |
+| Integrante | Rol y Rama | Fase | Aportes Clave y Responsabilidad |
 |---|---|---|---|
-| **Jessiel Chasiguano** | Project Manager | `main` | Gestion de PRs, integracion, documentacion, estabilizacion |
-| **Alejandro Chiliquinga** | Auditoria y UX | `feat/alejo-ux-screens` | Entrada de datos, Ley de Benford, deteccion de anomalias |
-| **Lizbeth Pillajo** | Arquitectura y Dominio | `feat/prototipo-liz` | Arquitectura en capas, modelado DDD, Big Five, Brand Fit Score |
-| **Alex Tituaña** | Diseno UI | `feat/alex-ui-components` | Atomic Design, componentes reutilizables, accesibilidad, Recs |
+| **Alejandro Chiliquinga** | UX & Deteccion de Fraude<br>`feat/alejo-ux-screens` | Fase 1 | Entrada de usuario, envio por teclado en `HomeScreen`, scraping conceptual de seguidores/likes, verificacion mediante Ley de Benford, alertas rojas de fraude y ampliacion de `SUSPICIOUS_HINTS`. |
+| **Lizbeth Pillajo** | Arquitectura & Dominio<br>`feat/prototipo-liz` | Fase 2 | Evaluacion de engagement de los 10 videos, modelado psicometrico Big Five (OCEAN), cruce con arquetipos de marca, calculo de Brand Fit Score, estructuracion de capas DDD y reglas puras RN-01 a RN-06. |
+| **Alex Tituaña** | Diseno UI & Recomendaciones<br>`feat/alex-ui-components` | Fase 3 | Aislamiento de videos con mayor acogida real, recomendacion de formatos estrategicos en `RecsScreen`, construccion de componentes nativos reutilizables (Atomic Design) y estandarizacion de accesibilidad (`hitSlop`, sombras). |
+| **Jessiel Chasiguano** | Project Manager & Integrador<br>`main` | Transversal | Coordinacion del equipo, resolucion de conflictos de fusion, revision y merge de todos los Pull Requests (#1 al #8), estabilizacion tecnica de dependencias/rutas y elaboracion de la documentacion tecnica. |
 
 ---
 
-## 3. Arquitectura de Software
+## 3. Arquitectura de Software y Metodologia
 
-### Patron Arquitectonico: Arquitectura en Capas (Layered / Clean Architecture)
-
-La arquitectura implementada es un patron de **Capas con Inversion de Dependencias**, donde el flujo de dependencias apunta siempre hacia el nucleo (dominio), que permanece totalmente aislado de React Native y de cualquier libreria externa.
+Se establece una estricta distincion entre el patron arquitectonico y el metodo de modelado:
 
 ```mermaid
 graph TD
-    P["Capa de Presentacion\nsrc/screens · src/components · src/navigation\nInterfaces nativas por Bounded Context"]
-    A["Capa de Aplicacion\nsrc/context · AppContext.tsx\nCasos de uso · Orquestacion · Estado global"]
-    I["Capa de Infraestructura\nsrc/infrastructure\nRepositorios en memoria · Adaptadores de datos"]
-    D["Capa de Dominio\nsrc/domain\nTypeScript puro · 0% dependencias de UI\nAggregate Root · Value Objects · Reglas RN-01 a RN-06"]
+    P["Presentacion (src/screens, src/components)\nInterfaces organizadas por Bounded Contexts"]
+    A["Aplicacion (src/context/AppContext.tsx)\nCasos de uso y orquestacion de estado global"]
+    I["Infraestructura (src/infrastructure)\nRepositorio en memoria (creatorRepository.ts)"]
+    D["Dominio (src/domain - TypeScript Puro)\nAggregate Root, Invariantes y Reglas RN-01..06"]
 
     P --> A
     A --> I
@@ -172,102 +84,24 @@ graph TD
     I --> D
 ```
 
-| Capa | Ubicacion | Responsabilidad |
+* **Patron Arquitectonico — Arquitectura en Capas (Layered / Clean Architecture):** Separacion estricta de responsabilidades con inversion de dependencias. El dominio (`src/domain/`) es 100% TypeScript puro y desconoce React Native o APIs externas. La infraestructura implementa adaptadores de persistencia sin acoplar la logica de negocio.
+* **Metodologia de Modelado — Domain-Driven Design (DDD):** Enfoque guiado por el negocio para delimitar subdominios mediante Bounded Contexts y formalizar el Lenguaje Ubicuo.
+
+### Bounded Contexts y Reglas de Negocio
+
+| Bounded Context | Pantallas | Reglas de Negocio Implementadas (`src/domain/services/rules.ts`) |
 |---|---|---|
-| **Presentacion** | `src/screens`, `src/components`, `src/navigation` | Renderizado de interfaces organizadas por Bounded Context |
-| **Aplicacion** | `src/context/AppContext.tsx` | Orquestacion de casos de uso: `startAnalysis`, `finishAnalysis`, `setArchetype` |
-| **Infraestructura** | `src/infrastructure/repositories/` | Resolucion de entidades auditadas: `resolveAuditedCreator(username)` |
-| **Dominio** | `src/domain/` | Modelos, invariantes y reglas de negocio puras; independiente del entorno de ejecucion |
+| **BC1: Auditoria y Fraude** | `HomeScreen`<br>`ProgressScreen`<br>`BenfordScreen` | **RN-01:** Validacion y sanitizacion de handle (`/^[a-zA-Z0-9._]{2,24}$/`).<br>**RN-02:** Deteccion de patrones anómalos o bots (`SUSPICIOUS_HINTS`). |
+| **BC2: Afinidad y Psicometria** | `ScoreScreen`<br>`BigFiveScreen` | **RN-03a/b:** Semaforo y etiqueta de afinidad del Brand Fit Score.<br>**RN-04:** Bono de traccion segun engagement rate (+1 a +5 pts).<br>**RN-05:** Evaluacion de brecha psicometrica Big Five vs. ideal del arquetipo (tolerancia $\le 15$). |
+| **BC3: Recomendaciones** | `RecsScreen` | **RN-06:** Guardian de recomendaciones; bloquea sugerencias si la cuenta es fraudulenta (`authentic === false`). |
+
+> Para consultar la definicion completa del Lenguaje Ubicuo, Aggregate Roots y contratos de dominio, ver [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ---
 
-### Metodologia de Diseno: Domain-Driven Design (DDD)
+## 4. Demostracion Visual y Flujo
 
-DDD no es una arquitectura sino un **enfoque metodologico de modelado de software** centrado en el dominio del negocio. Se aplica en dos niveles:
-
-**Diseno Estrategico — Bounded Contexts**
-
-```mermaid
-flowchart LR
-    BC1["BC1: Auditoria de Autenticidad\nHome · Progress · Benford\n---\nValidar username\nPipeline de auditoria\nLey de Benford\nVeredicto de autenticidad"]
-    BC2["BC2: Afinidad y Psicometria\nScore · BigFive\n---\nBrand Fit Score 0-100\nBono de engagement\nBrecha Big Five OCEAN\nArquetipos corporativos"]
-    BC3["BC3: Recomendaciones\nRecs\n---\nTop 3 videos por engagement\nTono editorial\nFormato sugerido\nGuardian RN-06"]
-
-    BC1 -->|"autentico = true"| BC2
-    BC2 --> BC3
-```
-
-**Diseno Tactico — Lenguaje Ubicuo**
-
-| Termino de Negocio | Codigo | Definicion |
-|---|---|---|
-| Creador Auditado | `Creator` *(Aggregate Root)* | Entidad principal: identidad, metricas, rasgos y evaluaciones del influencer |
-| Arquetipo de Marca | `Archetype` / `ArchetypeId` | Perfil de identidad corporativa: `tech`, `bienestar`, `entretenimiento`, `finanzas`, `causas` |
-| Distribucion de Benford | `BENFORD_EXPECTED` / `benfordObserved` | Frecuencia teorica vs. observada de primeros digitos en contadores |
-| Veredicto de Autenticidad | `authentic: boolean`, `confidence: number` | Determinacion binaria de legitimidad de la cuenta |
-| Brand Fit Score | `scores: Record<ArchetypeId, number>` | Puntuacion de compatibilidad normalizada 0-100 |
-| Perfil Big Five | `TRAITS` / `bigFive: number[]` | Vector OCEAN de la personalidad del creador (Apertura, Responsabilidad, Extraversion, Amabilidad, Neuroticismo) |
-| Vector Ideal | `IDEALS: Record<ArchetypeId, number[]>` | Puntuaciones psicometricas de referencia por arquetipo |
-| Brecha Psicometrica | `evaluateTraitAlignment()` | Distancia absoluta creador vs. ideal; activa barra ambar si supera tolerancia |
-| Bono de Traccion | `engagementBonus()` | Puntos extra segun tasa de engagement organico |
-| Tono Editorial | `Tone` | Clasificacion afectiva: `positivo`, `neutro`, `negativo` |
-| Video Destacado | `Video` *(Value Object)* | Titulo, vistas, engagement rate y tono de un video de la muestra |
-| Formato Sugerido | `format: string` | Recomendacion tactica de formato de contenido para la campana |
-
----
-
-### Reglas de Negocio — Domain Services
-
-Todas las decisiones logicas y matematicas estan aisladas en `src/domain/services/rules.ts` como funciones TypeScript puras, sin dependencias de UI:
-
-| Regla | Funcion | Comportamiento |
-|---|---|---|
-| **RN-01** | `validateCreatorUsername(rawInput)` | Sanitiza `@` y espacios. Valida `/^[a-zA-Z0-9._]{2,24}$/` |
-| **RN-02** | `hasSuspiciousPattern(username)` | Detecta coincidencias con `SUSPICIOUS_HINTS` (bots, granjas infladas) |
-| **RN-03a** | `scoreTone(score)` | `>= 65` → success · `>= 45` → warning · `< 45` → danger |
-| **RN-03b** | `affinityVerdictLabel(score)` | `>= 70` → "Excelente afinidad" · `< 70` → "Buena afinidad" |
-| **RN-04** | `engagementBonus(engagement)` | `>= 7%` → +5 pts · `>= 5%` → +3 pts · `>= 3%` → +1 pt · `< 3%` → 0 |
-| **RN-05** | `evaluateTraitAlignment(val, target)` | `|target - val| <= 15` → alineado (verde) · `> 15` → desalineado (ambar) |
-| **RN-06** | `canShowRecommendations(authentic)` | Bloquea `RecsScreen` si `authentic === false` |
-
----
-
-## 4. Recorrido del Usuario
-
-```mermaid
-flowchart TD
-    H["HomeScreen\nIngreso de @username\nValidacion RN-01"] --> P["ProgressScreen\nPipeline de auditoria\n5 fases secuenciales"]
-    P --> B["BenfordScreen\nVeredicto de autenticidad\nGrafico de primeros digitos"]
-    B -->|"Autentico"| S["ScoreScreen\nBrand Fit Score\nSelector de arquetipos"]
-    B -->|"Sospechoso"| X["Alerta de fraude\nFlujo bloqueado"]
-    S --> BF["BigFiveScreen\nBrecha psicometrica OCEAN\nBarras de alineacion RN-05"]
-    BF --> R["RecsScreen\nTop 3 videos\nFormato sugerido"]
-    X --> R2["RecsScreen bloqueada\nGuardian RN-06"]
-```
-
-| Pantalla | Bounded Context | Descripcion |
-|---|---|---|
-| `HomeScreen` | BC1 | Validacion de `@username` con RN-01; deteccion de patron sospechoso con RN-02 |
-| `ProgressScreen` | BC1 | Pipeline animado de 5 fases (1.1 s c/u): recoleccion, Benford, Big Five, engagement, Score |
-| `BenfordScreen` | BC1 | Curva logaritmica esperada vs. observada; alerta roja si `authentic === false` |
-| `ScoreScreen` | BC2 | Velocimetro SVG 0-100; selector de arquetipos con recalculo instantaneo; RN-03b |
-| `BigFiveScreen` | BC2 | Cinco barras OCEAN del creador vs. ideal del arquetipo; barras ambar por RN-05 |
-| `RecsScreen` | BC3 | Ranking de top 3 videos por engagement; formato sugerido; bloqueada por RN-06 si fraude |
-
----
-
-## 5. Diseno Visual (Figma)
-
-| Recurso | Enlace |
-|---|---|
-| **Prototipo de Interfaz Movil** | [![Figma](https://img.shields.io/badge/Figma-Prototipo_Grupal-F24E1E?style=flat-square&logo=figma&logoColor=white)](https://www.figma.com/design/QDYvI7DBZFhUtxmk8o9UB5/Prototipo-BradFit-Grupal?node-id=1-3&t=9IAFZa4ba9yWmyDh-1) |
-| **Sistema de Atomic Design** | [![FigJam](https://img.shields.io/badge/FigJam-Atomic_Design-A259FF?style=flat-square&logo=figma&logoColor=white)](https://www.figma.com/board/Zk2FYhOvrQX7BCrwJppllL/BrandFit-%C2%B7-Atomic-Design?node-id=0-1&p=f&t=rE8uW77jN4BucfBq-0) |
-
----
-
-## 6. Demostracion Visual
-
-Capturas reales del flujo de navegacion ejecutadas en **Expo Go**:
+El flujo interactivo se compone de 6 pantallas principales ejecutadas en **Expo Go**:
 
 | 1. Inicio y Busqueda | 2. Progreso de Analisis | 3. Autenticidad (Benford) | 4. Alerta de Anomalias |
 | :---: | :---: | :---: | :---: |
@@ -277,67 +111,37 @@ Capturas reales del flujo de navegacion ejecutadas en **Expo Go**:
 | :---: | :---: | :---: | :---: |
 | <img src="docs/screenshots/05-brand-fit-score.jpeg" width="180" alt="Brand Fit Score" /> | <img src="docs/screenshots/06-selector-arquetipos.jpeg" width="180" alt="Modal Arquetipos" /> | <img src="docs/screenshots/07-desglose-bigfive.jpeg" width="180" alt="Rasgos Big Five" /> | <img src="docs/screenshots/08-recomendaciones.jpeg" width="180" alt="Recomendaciones de Formato" /> |
 
----
-
-## 7. Uso de Inteligencia Artificial
-
-| Herramienta | Uso en el Proyecto |
-|---|---|
-| **Gemini 3.8 (Antigravity IDE)** | Unificacion estrategica del modelo de negocio B2B/B2C; traduccion de diseno Figma a React Native; modelado de la arquitectura en capas y reglas DDD; configuracion de Expo SDK 58 y compatibilidad de dependencias |
+* **Prototipo Figma:** [Figma Design](https://www.figma.com/design/QDYvI7DBZFhUtxmk8o9UB5/Prototipo-BradFit-Grupal?node-id=1-3&t=9IAFZa4ba9yWmyDh-1)
+* **Sistema de Diseno (Atomic Design):** [FigJam Board](https://www.figma.com/board/Zk2FYhOvrQX7BCrwJppllL/BrandFit-%C2%B7-Atomic-Design?node-id=0-1&p=f&t=rE8uW77jN4BucfBq-0)
 
 ---
 
-## 8. Estructura del Repositorio
+## 5. Estructura del Repositorio
 
 ```text
 BrandFit/
 ├── assets/                              Recursos graficos e iconos
-├── docs/
-│   ├── design/                          Esquemas de Atomic Design
-│   └── screenshots/                     Capturas reales del prototipo
+├── docs/                                Capturas y documentacion visual
 ├── src/
-│   ├── components/                      Libreria de componentes atomicos reutilizables
-│   │   ├── AppText.tsx                  Tipografia tipada con variantes Inter
-│   │   ├── Avatar.tsx                   Avatar 1:1 con gradiente dinamico
-│   │   ├── Button.tsx                   Boton tactil con hitSlop y retroalimentacion
-│   │   ├── Card.tsx                     Contenedor con sombras multiplataforma
-│   │   ├── Chip.tsx                     Chips para arquetipos y semaforo
-│   │   ├── EmptyState.tsx               Estado sin creador cargado
-│   │   ├── ScreenHeader.tsx             Encabezado estandar con titulos elasticos
-│   │   └── TabBar.tsx                   Barra de navegacion inferior
-│   ├── context/                         Capa de Aplicacion — AppContext.tsx
-│   ├── data/                            Re-exports de compatibilidad retroactiva
-│   ├── domain/                          CAPA DE DOMINIO (TypeScript puro)
-│   │   ├── models/constants.ts          Invariantes: ARCHETYPES, TRAITS, IDEALS, BENFORD_EXPECTED
-│   │   ├── models/types.ts              Aggregate Root Creator y Value Objects
-│   │   └── services/rules.ts           Reglas de negocio puras RN-01 a RN-06
-│   ├── infrastructure/                  CAPA DE INFRAESTRUCTURA
-│   │   └── repositories/
-│   │       └── creatorRepository.ts    resolveAuditedCreator(username)
-│   ├── navigation/                      AppNavigator.tsx
-│   ├── screens/                         CAPA DE PRESENTACION
-│   │   ├── HomeScreen.tsx               BC1: busqueda y validacion RN-01
-│   │   ├── ProgressScreen.tsx           BC1: pipeline de auditoria
-│   │   ├── BenfordScreen.tsx            BC1: auditoria forense y alerta
-│   │   ├── ScoreScreen.tsx              BC2: Brand Fit Score y arquetipos
-│   │   ├── BigFiveScreen.tsx            BC2: brecha psicometrica OCEAN
-│   │   ├── RecsScreen.tsx               BC3: top 3 videos y formato sugerido
-│   │   └── NoAnalysis.tsx               Vista fallback
-│   └── theme/                           Tokens de diseno: colores, espaciados, tipografia
-├── ARCHITECTURE.md                      Especificacion tecnica de la arquitectura
-├── app.json                             Configuracion Expo SDK 58
-├── babel.config.js
-├── index.ts
-├── package.json
-├── tsconfig.json
-└── README.md
+│   ├── components/                      Libreria de componentes nativos (Atomic Design)
+│   ├── context/                         Capa de Aplicacion: orquestador de estado (AppContext.tsx)
+│   ├── data/                            Re-exports para retrocompatibilidad
+│   ├── domain/                          Capa de Dominio (TypeScript puro, modelos y reglas RN-01..06)
+│   ├── infrastructure/                  Capa de Infraestructura (repositorios en memoria)
+│   ├── navigation/                      Enrutador y proteccion de notch (AppNavigator.tsx)
+│   ├── screens/                         Capa de Presentacion (vistas por Bounded Context)
+│   └── theme/                           Tokens de diseno: colores, espaciados y tipografia
+├── ARCHITECTURE.md                      Especificacion tecnica de la arquitectura en capas y DDD
+├── app.json                             Configuracion de Expo SDK 58
+├── package.json                         Dependencias y scripts
+└── README.md                            Documentacion general del proyecto
 ```
 
 ---
 
-## 9. Instrucciones de Ejecucion
+## 6. Instrucciones de Ejecucion
 
-**Requisitos:** Node.js 18+ y la app [Expo Go](https://expo.dev/go) en tu dispositivo movil.
+**Requisitos:** Node.js 18+ y la app **Expo Go** instalada en tu dispositivo movil ([Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent) o [App Store](https://apps.apple.com/app/expo-go/id982107779)).
 
 ```bash
 # 1. Clonar el repositorio
@@ -351,22 +155,12 @@ npm install --legacy-peer-deps
 npx expo start -c
 ```
 
-| Plataforma | Accion |
-|---|---|
-| **Android** | Abrir Expo Go y escanear el codigo QR de la terminal |
-| **iOS** | Enfocar el QR con la camara nativa y pulsar la notificacion |
-| **Web** | Presionar `w` en la terminal |
+* **Android:** Escanear el codigo QR desde la aplicacion Expo Go.
+* **iOS:** Escanear el codigo QR con la camara nativa y abrir en Expo Go.
+* **Navegador Web:** Presionar `w` en la terminal.
 
 > [!TIP]
-> Para activar el flujo de cuenta sospechosa, escribe `@viralboost`, `@bot` o `@fake` en la pantalla de inicio.
-
----
-
-## 10. Documentacion Complementaria
-
-| Documento | Descripcion |
-|---|---|
-| [ARCHITECTURE.md](ARCHITECTURE.md) | Contratos de tipos, Aggregate Roots, invariantes del dominio y responsabilidades por Bounded Context |
+> Para probar la deteccion de fraude en vivo, escribe `@viralboost`, `@bot` o `@fake` en el buscador de la pantalla de inicio.
 
 ---
 
