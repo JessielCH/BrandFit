@@ -24,6 +24,11 @@ export default function HomeScreen() {
   const [value, setValue] = useState('')
   const [error, setError] = useState('')
 
+  function handleUsernameChange(text: string) {
+    setValue(text)
+    if (error) setError('')
+  }
+
   function submit() {
     // RN-01: validación y sanitización del @username via Domain Service
     const { valid, clean, error: ruleError } = validateCreatorUsername(value)
@@ -59,7 +64,7 @@ export default function HomeScreen() {
             <Ionicons name="at" size={20} color={Colors.muted} />
             <TextInput
               value={value}
-              onChangeText={(t) => { setValue(t); if (error) setError('') }}
+              onChangeText={handleUsernameChange}
               placeholder="username de TikTok"
               placeholderTextColor={Colors.placeholder}
               autoCapitalize="none"
