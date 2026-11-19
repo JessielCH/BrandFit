@@ -1,6 +1,12 @@
 /**
- * Contexto global de BrandFit.
- * Gestiona el estado de navegación, el creador activo y el arquetipo seleccionado.
+ * @layer Application – Context (Orquestador de Casos de Uso)
+ * @boundedContext Transversal (coordina BC1, BC2 y BC3)
+ *
+ * Casos de Uso:
+ *   startAnalysis → BC1: inicia el pipeline de auditoría
+ *   finishAnalysis → BC1: resuelve el Creador Auditado via repositorio
+ *   openCreator   → Historial: navega al detalle de un análisis previo
+ *   setArchetype  → BC2: cambia el Arquetipo de Marca seleccionado
  */
 import React, {
   createContext,
@@ -9,10 +15,8 @@ import React, {
   useState,
   type ReactNode,
 } from 'react'
-import type { ArchetypeId, Creator, ScreenId } from '../data/types'
-import { CREATORS, FRAUD_CREATOR, SUSPICIOUS_HINTS } from '../data/constants'
-
-// ─── Tipos ────────────────────────────────────────────────────────────────────
+import type { ArchetypeId, Creator, ScreenId } from '../domain/models/types'
+import { resolveAuditedCreator } from '../infrastructure/repositories/creatorRepository'
 
 export type AppCtx = {
   screen: ScreenId
@@ -26,11 +30,7 @@ export type AppCtx = {
   finishAnalysis: () => void
 }
 
-// ─── Contexto ─────────────────────────────────────────────────────────────────
-
 const AppContext = createContext<AppCtx | null>(null)
-
-// ─── Provider ─────────────────────────────────────────────────────────────────
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [screen, setScreen] = useState<ScreenId>('home')
@@ -45,27 +45,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setScreen('progress')
   }, [])
 
+  /**
+   * Caso de Uso: finishAnalysis
+   * Delega en el Repositorio de Infraestructura (aplica RN-02 internamente).
+   */
   const finishAnalysis = useCallback(() => {
-    const u = pendingUsername || 'alexmando15'
-    const lower = u.toLowerCase()
-    let result: Creator
-
-    if (SUSPICIOUS_HINTS.some((h) => lower.includes(h))) {
-      result = { ...FRAUD_CREATOR, username: u }
-    } else {
-      const known = CREATORS.find((c) => c.username.toLowerCase() === lower)
-      result =
-        known ??
-        ({
-          ...CREATORS[0],
-          username: u,
-          name: u,
-          analyzedAt: 'Ahora',
-          hue: 140 + ((u.length * 7) % 40),
-        } as Creator)
-    }
-
-    setCreator(result)
+    const resolved = resolveAuditedCreator(pendingUsername || 'alexmando15')
+    setCreator(resolved)
     setScreen('benford')
   }, [pendingUsername])
 
@@ -89,8 +75,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   return <AppContext.Provider value={ctx}>{children}</AppContext.Provider>
 }
-
-// ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export function useApp(): AppCtx {
   const ctx = useContext(AppContext)
