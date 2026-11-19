@@ -27,7 +27,9 @@ export function ScreenHeader({ title, subtitle, onBack, right }: Props) {
       )}
       <View style={styles.row}>
         <View style={styles.titleWrap}>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
+            {title}
+          </Text>
           {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
         </View>
         {right ? <View>{right}</View> : null}
