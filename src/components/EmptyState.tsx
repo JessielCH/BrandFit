@@ -49,14 +49,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   body: {
-    marginTop: 6,
+    marginTop: Spacing.md,
     fontSize: FontSize.base,
     color: Colors.muted,
     textAlign: 'center',
     lineHeight: FontSize.base * 1.5,
   },
   actionWrap: {
-    marginTop: 24,
+    marginTop: Spacing['3xl'],
     width: '100%',
   },
 })

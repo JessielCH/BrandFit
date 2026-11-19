@@ -21,6 +21,7 @@ type Props = {
   variant?: Variant
   disabled?: boolean
   loading?: boolean
+  accessibilityLabel?: string
   style?: StyleProp<ViewStyle>
 }
 
@@ -30,13 +31,19 @@ export function Button({
   variant = 'primary',
   disabled = false,
   loading = false,
+  accessibilityLabel,
   style,
 }: Props) {
+  const resolvedLabel =
+    accessibilityLabel ?? (typeof children === 'string' ? children : undefined)
+
   return (
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled || loading}
-      activeOpacity={0.75}
+      activeOpacity={0.8}
+      accessibilityRole="button"
+      accessibilityLabel={resolvedLabel}
       style={[
         styles.base,
         variant === 'primary' && styles.primary,
