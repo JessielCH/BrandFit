@@ -6,8 +6,8 @@ import React from 'react'
 import { View, ScrollView, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useApp } from '../context'
-import { IDEALS, TRAITS } from '../data/constants'
-import { archetypeLabel } from '../data/helpers'
+import { IDEALS, TRAITS, evaluateTraitAlignment } from '../domain'
+import { archetypeLabel } from '../domain'
 import { Button, Card, ScreenHeader, AppText as Text } from '../components'
 import { Colors, FontSize, Radius, Spacing } from '../theme'
 import NoAnalysis from './NoAnalysis'
@@ -48,7 +48,9 @@ export default function BigFiveScreen() {
         {TRAITS.map((trait, i) => {
           const value = creator.bigFive[i]
           const target = ideal[i]
-          const diff = Math.abs(target - value)
+          // RN-05: Brecha Psicométrica — verde si alineado (diff ≤ 15), ámbar si desviación > 15
+          const { diff, isAligned } = evaluateTraitAlignment(value, target)
+          const barColor = isAligned ? Colors.successBar : Colors.warningBg
           return (
             <View
               key={trait}
@@ -58,14 +60,16 @@ export default function BigFiveScreen() {
                 <Text style={styles.traitName}>{trait}</Text>
                 <Text style={styles.traitValues}>
                   {value} / {target} ·{' '}
-                  <Text style={styles.traitDiff}>Dif. {diff}</Text>
+                  <Text style={[styles.traitDiff, !isAligned && styles.traitDiffWarning]}>
+                    Dif. {diff}{!isAligned ? ' ⚠' : ''}
+                  </Text>
                 </Text>
               </View>
 
               {/* Barra de progreso con marcador ideal */}
               <View style={styles.barTrack}>
-                {/* Barra del creador */}
-                <View style={[styles.barFill, { width: `${value}%` }]} />
+                {/* Barra del creador — ámbar si fuera de tolerancia (RN-05) */}
+                <View style={[styles.barFill, { width: `${value}%`, backgroundColor: barColor }]} />
                 {/* Marcador de posición ideal */}
                 <View style={[styles.idealMarker, { left: `${target}%` }]} />
               </View>
@@ -128,6 +132,7 @@ const styles = StyleSheet.create({
   traitName: { fontSize: FontSize.base, fontWeight: '600', color: Colors.ink },
   traitValues: { fontSize: FontSize.sm, color: Colors.muted },
   traitDiff: { fontWeight: '600', color: Colors.ink },
+  traitDiffWarning: { color: Colors.warningText },
 
   // Barra
   barTrack: {
