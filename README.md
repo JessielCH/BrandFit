@@ -45,7 +45,7 @@ El desarrollo se ejecuto en un pipeline colaborativo y secuencial de cuatro etap
 
 ```mermaid
 flowchart LR
-    A["1. Entrada y Benford\nAlejandro Chiliquinga"] --> B["2. Psicometria y Fit\nLizbeth Pillajo"]
+    A["1. Entrada y Benford\nAlejandro Chiliquinga"] --> B["2. Psicometria y Fit\nLiz Pillajo"]
     B --> C["3. Formatos y UI\nAlex Tituaña"]
     C --> D["4. Integracion y Gestion\nJessiel Chasiguano"]
 ```
@@ -53,7 +53,7 @@ flowchart LR
 | Integrante | Rol y Rama | Fase | Responsabilidad y Aportes Clave |
 |---|---|---|---|
 | **Alejandro Chiliquinga** | UX & Deteccion de Fraude<br>`feat/alejo-ux-screens` | Fase 1 | Entrada de usuario y soporte de teclado en `HomeScreen`, paso de metricas por la Ley de Benford, generacion de alertas rojas de fraude en `BenfordScreen` y palabras clave `SUSPICIOUS_HINTS`. |
-| **Lizbeth Pillajo** | Arquitectura & Dominio<br>`feat/prototipo-liz` | Fase 2 | Evaluacion de engagement en 10 videos, modelado psicometrico Big Five (OCEAN), cruce con arquetipos de marca, calculo del Brand Fit Score, estructuracion de capas y reglas puras RN-01 a RN-06. |
+| **Liz Pillajo** | Arquitectura & Dominio<br>`feat/prototipo-liz` | Fase 2 | Evaluacion de engagement en 10 videos, modelado psicometrico Big Five (OCEAN), cruce con arquetipos de marca, calculo del Brand Fit Score, estructuracion de capas y reglas puras RN-01 a RN-06. |
 | **Alex Tituaña** | Diseno UI & Recomendaciones<br>`feat/alex-ui-components` | Fase 3 | Aislamiento de videos de mayor acogida organica, recomendacion de formatos estrategicos en `RecsScreen`, creacion de la libreria de componentes nativos (Atomic Design) y accesibilidad tactil. |
 | **Jessiel Chasiguano** | Project Manager & Integrador<br>`main` | Fase 4 | Coordinacion general, revision y fusion de Pull Requests (#1 al #8), resolucion de conflictos, integracion de modulos, estabilizacion tecnica de dependencias/rutas y documentacion. |
 
