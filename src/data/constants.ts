@@ -1,5 +1,7 @@
 /**
  * @deprecated Re-exporta desde la capa de Dominio para compatibilidad.
+ * Los imports existentes (src/data/constants) siguen funcionando.
+ * Migración completada: src/data → src/domain
  */
 export type { ArchetypeId, Creator, Archetype, Video, Tone, ScoreTone } from '../domain/models/types'
 export {

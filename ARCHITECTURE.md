@@ -7,7 +7,7 @@
 ## 1. Capas DDD
 
 ```
-src/
+BrandFit-Liz/src/
 ├── domain/                      🧠 Dominio (0% UI — TypeScript puro)
 │   ├── models/
 │   │   ├── types.ts             Aggregate Root (Creator) y Value Objects
